@@ -1,0 +1,79 @@
+import React from 'react'
+import type { Track } from './types'
+
+import { TrackItem } from './TrackItem'
+
+import { useNotifications } from '../../../utils/Notification/hooks/useNotification'
+
+import { useTheme } from '../../../utils/Theme/hooks/useTheme'
+
+export const UserTracks = () => {
+	const [tracks, setTracks] = React.useState<Track[]>([])
+
+	const { showError } = useNotifications()
+
+	const { isDark } = useTheme()
+
+	const fetchTracks = async () => {
+		const response = await fetch(
+			'http://localhost:8080/getUserTracks?start=0&end=20',
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+				},
+				credentials: 'include',
+			}
+		)
+
+		if (!response.ok) {
+			const errorText = await response.text()
+			showError(errorText || 'Ошибка получения треков')
+			return
+		}
+
+		const data = await response.json()
+		setTracks(data || [])
+	}
+
+	React.useEffect(() => {
+		fetchTracks()
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+	return (
+		<div
+			className={`w-full h-auto mb-20 ${
+				isDark ? 'bg-[#24232B]' : 'bg-[#E5E7EB]'
+			} border-none rounded-2xl shadow-xl overflow-hidden p-8 font-sans transform transition-all duration-300 hover:shadow-2xl`}
+		>
+			<h1
+				className={`text-2xl font-bold mb-6 ${
+					isDark ? 'text-white' : 'text-black'
+				}`}
+			>
+				Мои треки
+			</h1>{' '}
+			{tracks.length > 0 ? (
+				tracks.map((track, index) => (
+					<TrackItem key={index} track={track} index={index} />
+				))
+			) : (
+				<div
+					className={`text-center ${
+						isDark ? 'text-white' : 'text-black'
+					} text-2xl mt-12 font-semibold`}
+				>
+					<p>
+						Ничего не найдено
+						<br />
+						<span className='text-purple-500 cursor-pointer'>
+							загрузите
+						</span>{' '}
+						свой первый трек
+					</p>
+				</div>
+			)}
+		</div>
+	)
+}

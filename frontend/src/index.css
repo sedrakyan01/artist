@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+@import 'react-tooltip/dist/react-tooltip.css';
+
+* {
+	font-family: Roboto, sans-serif;
+	user-select: none;
+}
+
+html,
+body {
+	/* background-color: #18161c; */
+	margin-bottom: 0px;
+}
+
+button:focus,
+svg:focus {
+	outline: none;
+	cursor: pointer;
+}
