@@ -1,6 +1,6 @@
 import { useTheme } from '../../../../utils/Theme/hooks/useTheme'
 
-export const ProfileCardSkeleton = () => {
+export const ProfileCardSkeleton:React.FC = () => {
 	const randomColors = ['#36343F', '#3a3841', '#24232B']
 	const { isDark } = useTheme()
 	return (

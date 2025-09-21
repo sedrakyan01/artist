@@ -9,7 +9,8 @@
 html,
 body {
 	/* background-color: #18161c; */
-	margin-bottom: 0px;
+	margin-bottom: 100px;
+	scroll-behavior: smooth;
 }
 
 button:focus,
