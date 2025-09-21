@@ -1,7 +1,7 @@
 import { Ellipsis, Heart, Play } from 'lucide-react'
 import { useTheme } from '../../../../utils/Theme/hooks/useTheme'
 
-export const TrackItemSkeleton = () => {
+export const NewTracksSkeleton = () => {
 	const { isDark } = useTheme()
 	return (
 		<>

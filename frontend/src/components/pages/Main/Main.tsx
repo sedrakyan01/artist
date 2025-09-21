@@ -2,6 +2,7 @@ import { Header } from '../../layouts/Header/Header'
 import { SideBar } from '../../layouts/SideBar/SideBar'
 
 import { Genres } from './Genres/Genres'
+import { NewTracks } from './NewTracks/NewTracks'
 
 import { useTheme } from '../../utils/Theme/hooks/useTheme'
 
@@ -20,6 +21,7 @@ export const Main = () => {
 			<div className='flex-1 ml-[80px] px-8 space-y-8'>
 				<Header />
 				<Genres />
+				<NewTracks />
 			</div>
 		</div>
 	)

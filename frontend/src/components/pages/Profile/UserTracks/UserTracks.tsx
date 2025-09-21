@@ -43,8 +43,11 @@ export const UserTracks = () => {
 			}
 
 			const data = await response.json()
+			if(data.length === 0) {
+				setIsLoading(false)
+			}
 			setTracks(data || [])
-			setSkeletonCount(data?.length || 20) // сохраняем количество
+			setSkeletonCount(data?.length || 20)
 		} catch (error) {
 			showError('Ошибка получения треков', error)
 		} finally {
@@ -91,7 +94,7 @@ export const UserTracks = () => {
 				<div
 					className={`text-center ${
 						isDark ? 'text-white' : 'text-black'
-					} text-2xl mt-12 font-semibold`}
+					} text-2xl mt-12 mb-10 font-semibold`}
 				>
 					<p>
 						Ничего не найдено

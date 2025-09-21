@@ -15,17 +15,7 @@ export default tseslint.config([
 			reactHooks.configs['recommended-latest'],
 			reactRefresh.configs.vite,
 		],
-		rules: {
-			'@typescript-eslint/no-unused-vars': [
-				'warn',
-				'error',
-				{
-					argsIgnorePattern: '^_',
-					varsIgnorePattern: '^_',
-					caughtErrorsIgnorePattern: '^_',
-				},
-			],
-		},
+		
 		languageOptions: {
 			ecmaVersion: 2020,
 			globals: globals.browser,
