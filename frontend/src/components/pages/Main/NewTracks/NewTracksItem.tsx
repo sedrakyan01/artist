@@ -1,11 +1,25 @@
-import { Ellipsis, Heart, Play } from 'lucide-react'
+import { Ellipsis, Heart, Pause, Play } from 'lucide-react'
 
 import { useTheme } from '../../../utils/Theme/hooks/useTheme'
 
 import { FormatDuration } from '../../../utils/FormatDuration/FormatDuration'
 
-export const NewTracksItem = ({ track, index }) => {
+import { useAudioContext } from '../../../context/Audio/exports'
+
+import type { NewTracksItemProps } from './types'
+
+export const NewTracksItem = ({ track, index }: NewTracksItemProps) => {
+	const { togglePlayPause, currentTrack, isPlaying } = useAudioContext()
 	const { isDark } = useTheme()
+
+	const isCurrentTrack = currentTrack?.track_id === track.track_id
+
+	const handleClick = async (
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
+		e.stopPropagation()
+		await togglePlayPause(track)
+	}
 	return (
 		<>
 			<div
@@ -40,10 +54,17 @@ export const NewTracksItem = ({ track, index }) => {
 						}
 					/>
 					<button className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50'>
-						<div className='p-1.5 rounded-full bg-purple-500/90 hover:bg-purple-500 transition-colors cursor-pointer duration-200'>
+						<div
+							onClick={handleClick}
+							className='p-1.5 rounded-full bg-purple-500/90 hover:bg-purple-500 transition-colors cursor-pointer duration-200'
+						>
 							{/* <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' /> */}
 
-							<Play size={16} className='text-white ml-0.5 cursor-pointer' />
+							{isCurrentTrack && isPlaying ? (
+								<Pause size={16} className='text-white ml-0.5 cursor-pointer' />
+							) : (
+								<Play size={16} className='text-white ml-0.5 cursor-pointer' />
+							)}
 						</div>
 					</button>
 				</div>
@@ -73,6 +94,7 @@ export const NewTracksItem = ({ track, index }) => {
 				</div>
 				<div className='items-center gap-2 hidden group-hover:flex icons-container'>
 					<button
+						onClick={handleClick}
 						className={`p-1.5 rounded-full ${
 							isDark
 								? 'text-gray-400 hover:text-purple-400'
@@ -80,7 +102,11 @@ export const NewTracksItem = ({ track, index }) => {
 						} hover:bg-purple-500/10 transition-colors duration-200 cursor-pointer`}
 					>
 						{/* <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' /> */}
-						<Play size={18} className='ml-0.5' />
+						{isCurrentTrack && isPlaying ? (
+							<Pause size={18} className='ml-0.5' />
+						) : (
+							<Play size={18} className='ml-0.5' />
+						)}
 					</button>
 					<button
 						className={`p-1.5 rounded-full ${

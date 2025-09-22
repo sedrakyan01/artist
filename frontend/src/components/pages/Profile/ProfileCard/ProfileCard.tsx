@@ -81,7 +81,7 @@ export const ProfileCard = () => {
 	const handleMouseLeave = () => {
 		setTimeout(() => {
 			setComponentState(prev => ({ ...prev, showCopyTooltip: false }))
-		}, 200)
+		}, 1)
 	}
 
 	const handleCopyUsername = async () => {

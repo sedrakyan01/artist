@@ -9,7 +9,9 @@ import { useNotifications } from '../../../utils/Notification/hooks/useNotificat
 import { NewTracksItem } from './NewTracksItem'
 import { NewTracksSkeleton } from './Skeleton/NewTracksSkeleton'
 
-export const NewTracks = () => {
+import type { NewTracksProps } from './types'
+
+export const NewTracks: React.FC<NewTracksProps> = ({ tracks }) => {
 	const navigate = useNavigate()
 	const { isDark } = useTheme()
 
@@ -97,7 +99,9 @@ export const NewTracks = () => {
 						<NewTracksSkeleton key={index} />
 					))
 				) : newTracks.length > 0 ? (
-					newTracks.map((track, index) => <NewTracksItem key={index} track={track} index={index} />)
+					newTracks.map((track, index) => (
+						<NewTracksItem key={index} track={track} index={index} />
+					))
 				) : (
 					<div
 						className={`text-center ${

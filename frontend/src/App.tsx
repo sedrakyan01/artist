@@ -12,6 +12,8 @@ import { Profile } from './components/pages/Profile/Profile'
 import { Settings } from './components/pages/Settings/Settings'
 import { Tracks } from './components/pages/Tracks/Tracks'
 
+import { MiniPlayer } from './components/layouts/MiniPlayer/MiniPlayer'
+
 function App() {
 	return (
 		<div>
@@ -44,6 +46,7 @@ function App() {
 					/>
 					<Route path='*' element={<Navigate to='/' />} />
 				</Routes>
+				<MiniPlayer />
 			</Router>
 		</div>
 	)
