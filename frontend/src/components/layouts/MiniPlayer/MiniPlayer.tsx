@@ -7,10 +7,14 @@ import { FormatDuration } from '../../utils/FormatDuration/FormatDuration'
 import { PlaylistSelector } from '../PlaylistSelector/PlaylistSelector'
 import { TrackInfo } from '../TrackInfo/TrackInfo'
 
+import { useNotifications } from '../../utils/Notification/hooks/useNotification'
+
 const defaultImage = 'https://misc.scdn.co/liked-songs/liked-songs-640.png'
 
 export const MiniPlayer: React.FC = () => {
 	const audioContext = useContext(AudioContext)
+
+	const { showError, showSuccess } = useNotifications()
 
 	const [volume, setVolume] = useState<number>(1)
 	const [isMuted, setIsMuted] = useState<boolean>(false)
@@ -38,12 +42,11 @@ export const MiniPlayer: React.FC = () => {
 		const audio = audioRef?.current
 		if (audio) {
 			audio.volume = volume
-			console.log(`Volume set to ${volume}`)
 		}
 	}, [volume, audioRef])
 
 	if (!audioContext) {
-		console.error('AudioContext is not provided')
+		console.error('AudioContext не предоставлен')
 		return null
 	}
 
@@ -84,21 +87,14 @@ export const MiniPlayer: React.FC = () => {
 	}
 
 	const toggleTrackInfo = () => {
-		if (!isTrackSelected) {
-			console.log('No track selected, ignoring track info toggle')
-			return
-		}
 		setIsTrackInfoOpen(!isTrackInfoOpen)
 	}
 
 	const handlePlayPause = async () => {
 		if (!isTrackSelected) {
-			console.log('No track selected, ignoring play/pause')
 			return
 		}
-		console.log(
-			`Toggling play/pause for track: ${track.title} (ID: ${track.track_id})`
-		)
+
 		await togglePlayPause(track, [])
 	}
 
@@ -110,7 +106,7 @@ export const MiniPlayer: React.FC = () => {
 					: null
 
 			if (!token) {
-				throw new Error('No access token found')
+				showError('Не удалось добавить трек в плейлист')
 			}
 
 			const response = await fetch(`http://localhost:8080/addtracktoplaylist`, {
@@ -128,29 +124,25 @@ export const MiniPlayer: React.FC = () => {
 
 			if (!response.ok) {
 				const errorText = await response.text()
-				throw new Error(
-					`Failed to add track to playlist: ${response.status} ${errorText}`
-				)
+				showError('Не удалось добавить трек в плейлист', errorText)
 			}
 
-			console.log(
-				`Successfully added track ${track.title} to playlist ${playlistId}`
-			)
+			showSuccess('Трек успешно добавлен в плейлист')
 		} catch (error) {
-			console.error('Error adding track to playlist:', error)
+			showError('Ошибка добавления трека в плейлист:', error)
 			throw error
 		}
 	}
 
 	return (
 		<div
-			className='fixed bottom-0 left-0 right-0 bg-[#1A181F] backdrop-blur-md border-t border-[#2A293F] p-4 flex items-center z-50 shadow-lg transition-all duration-300'
+			className='fixed bottom-0 left-0 right-0 bg-[#18161c] backdrop-blur-md border-t border-[#2A293F] p-4 flex items-center z-10 shadow-lg transition-all duration-300'
 			onMouseEnter={() => setIsHovering(true)}
 			onMouseLeave={() => setIsHovering(false)}
 			style={{ height: '90px' }}
 		>
 			<div className='flex items-center w-56'>
-				<div className='w-16 h-16 min-w-16 rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group'>
+				<div className='w-16 h-16 min-w-16 rounded-lg overflow-hidden shadow-md transition-transform duration-300 group'>
 					<img
 						src={
 							track.track_picture
@@ -179,7 +171,7 @@ export const MiniPlayer: React.FC = () => {
 				<div className='flex items-center justify-center gap-6 mb-2 w-full'>
 					<button
 						onClick={playPreviousTrack}
-						className={`w-8 h-8 flex items-center justify-center transition-all duration-200 hover:scale-110 ${
+						className={`w-8 h-8 flex items-center justify-center transition-all duration-200 cursor-pointer ${
 							isTrackSelected
 								? 'text-gray-400 hover:text-white'
 								: 'text-gray-600 cursor-pointer'
@@ -200,20 +192,20 @@ export const MiniPlayer: React.FC = () => {
 						aria-label={isPlaying && isTrackSelected ? 'Pause' : 'Play'}
 					>
 						{isLoading && isTrackSelected ? (
-							<div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
+							<div className='w-5 h-5 border-2 border-white border-t-transparent cursor-pointer rounded-full animate-spin' />
 						) : isPlaying && isTrackSelected ? (
-							<div className='ml-[1px]'>
+							<div>
 								<FaPause size={14} />
 							</div>
 						) : (
-							<div className='text-center flex justify-center'>
+							<div className='text-center cursor-pointer flex justify-center'>
 								<FaPlay size={14} />
 							</div>
 						)}
 					</button>
 					<button
 						onClick={playNextTrack}
-						className={`w-8 h-8 flex items-center justify-center transition-all duration-200 hover:scale-110 ${
+						className={`w-8 h-8 flex items-center justify-center transition-all duration-200 cursor-pointer ${
 							isTrackSelected
 								? 'text-gray-400 hover:text-white'
 								: 'text-gray-600 cursor-pointer'

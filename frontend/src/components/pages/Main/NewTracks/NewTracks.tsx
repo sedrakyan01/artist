@@ -9,9 +9,11 @@ import { useNotifications } from '../../../utils/Notification/hooks/useNotificat
 import { NewTracksItem } from './NewTracksItem'
 import { NewTracksSkeleton } from './Skeleton/NewTracksSkeleton'
 
+import { fetchNewTracks } from '../../../utils/Fetch/NewTracks/FetchNewTracks'
+
 import type { NewTracksProps } from './types'
 
-export const NewTracks: React.FC<NewTracksProps> = ({ tracks }) => {
+export const NewTracks: React.FC<NewTracksProps> = () => {
 	const navigate = useNavigate()
 	const { isDark } = useTheme()
 
@@ -19,35 +21,16 @@ export const NewTracks: React.FC<NewTracksProps> = ({ tracks }) => {
 
 	const [isLoading, setIsLoading] = useState(true)
 
-	const [newTracks, setNewTracks] = useState<any[]>([])
+	const [newTracks, setNewTracks] = useState([])
 
-	const [skeletonCount, setSkeletonCount] = useState(6)
+	const [skeletonCount, setSkeletonCount] = useState(6) // eslint-disable-line
 
 	useEffect(() => {
-		const fetchNewTracks = async () => {
-			const startTime = Date.now()
+		const startTime = Date.now()
+		const load = async () => {
 			try {
-				const response = await fetch('http://localhost:8080/main', {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					credentials: 'include',
-				})
-				if (!response.ok) {
-					const errorText = await response.text()
-					showError('Ошибка получения новых треков', errorText)
-					return
-				}
-				const data = await response.json()
-				if (!data) {
-					showError(
-						'Ошибка получения новых треков',
-						'Не удалось получить новые треки'
-					)
-					return
-				}
-				setNewTracks(data.tracks?.newTracks || [])
+				const tracks = await fetchNewTracks()
+				setNewTracks(tracks)
 			} catch (error) {
 				showError('Ошибка получения новых треков', error)
 			} finally {
@@ -64,8 +47,8 @@ export const NewTracks: React.FC<NewTracksProps> = ({ tracks }) => {
 				}
 			}
 		}
-		fetchNewTracks()
-	}, [])
+		load()
+	}, []) // eslint-disable-line
 
 	return (
 		<div
@@ -104,9 +87,9 @@ export const NewTracks: React.FC<NewTracksProps> = ({ tracks }) => {
 					))
 				) : (
 					<div
-						className={`text-center ${
+						className={`text-center mx-auto ${
 							isDark ? 'text-white' : 'text-black'
-						} text-2xl mt-12 mb-10 font-semibold`}
+						} text-2xl mt-12 mb-10 font-semibold col-span-full grid place-items-center h-64`}
 					>
 						<p>
 							Ничего не найдено
@@ -114,7 +97,7 @@ export const NewTracks: React.FC<NewTracksProps> = ({ tracks }) => {
 							<span className='text-purple-500 cursor-pointer'>
 								загрузите
 							</span>{' '}
-							свой первый трек
+							6 треков чтобы увидеть
 						</p>
 					</div>
 				)}

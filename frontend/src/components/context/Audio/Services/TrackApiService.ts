@@ -16,7 +16,7 @@ export class TrackApiService {
 	): Promise<TrackMetadata | null> {
 		if (!token || !trackId) {
 			throw new Error(
-				!token ? 'Токен авторизации отсутствует' : 'Track ID отсутствует'
+				!token ? 'Ошибка авторизации' : 'Track ID отсутствует'
 			)
 		}
 

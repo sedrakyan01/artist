@@ -13,6 +13,7 @@ export const Main = () => {
 			className={`text-white mt-30 h-screen flex ${
 				isDark ? 'bg-[#18161C]' : 'bg-[#FFF]'
 			}`}
+			style={{marginBottom: "350px"}}
 		>
 			<div className='z-[50]'>
 				<SideBar />

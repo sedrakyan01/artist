@@ -5,6 +5,8 @@ import Divider, { DividerOr } from '../../../ui/Divider/Divider'
 import { useNotifications } from '../../../utils/Notification/hooks/useNotification'
 import type { LoginData, LoginProps } from './types'
 
+import { fetchNewTracks } from '../../../utils/Fetch/NewTracks/FetchNewTracks'
+
 import { useTheme } from '../../../utils/Theme/hooks/useTheme'
 
 const SignIn: React.FC<LoginProps> = ({
@@ -99,6 +101,12 @@ const SignIn: React.FC<LoginProps> = ({
 
 				closeLogin()
 				onSuccessfulLogin?.()
+				try {
+					const tracks = await fetchNewTracks()
+					console.log('Получили новые треки:', tracks)
+				} catch (err) {
+					console.error('Не удалось получить новые треки:', err)
+				}
 			} else {
 				throw new Error('No access token received')
 			}
@@ -181,7 +189,12 @@ const SignIn: React.FC<LoginProps> = ({
 							} pt-2 pb-2 pl-4 pr-2 rounded m-auto w-full h-[55px] mb-2 placeholder-[#7C7C7C] mt-2 outline-none hover:ring-2 hover:ring-purple-600 focus:ring-2 focus:ring-purple-600 transition-all duration-300`}
 							required
 						/>
-						<Link to='/passwordchange' className={`text-sm ${isDark ? "text-[#C7C7C7]" : "text-black"} mb-2`}>
+						<Link
+							to='/passwordchange'
+							className={`text-sm ${
+								isDark ? 'text-[#C7C7C7]' : 'text-black'
+							} mb-2`}
+						>
 							Забыли пароль?
 						</Link>
 					</div>
@@ -201,11 +214,19 @@ const SignIn: React.FC<LoginProps> = ({
 				</div>
 
 				<div className='text-center m-auto'>
-					<span className={`mt-0 text-center text-sm ${isDark ? "text-[#C7C7C7]" : "text-black"}`}>
+					<span
+						className={`mt-0 text-center text-sm ${
+							isDark ? 'text-[#C7C7C7]' : 'text-black'
+						}`}
+					>
 						Нет аккаунта?{' '}
 					</span>
 					<span
-						className={`underline text-sm underline-offset-4 cursor-pointer ${isDark ? "text-[#fff] hover:text-purple-400 " : "text-black hover:text-purple-600 "} transition-colors`}
+						className={`underline text-sm underline-offset-4 cursor-pointer ${
+							isDark
+								? 'text-[#fff] hover:text-purple-400 '
+								: 'text-black hover:text-purple-600 '
+						} transition-colors`}
 						onClick={onSwitchToRegister}
 					>
 						Зарегистрируйтесь

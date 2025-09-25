@@ -43,7 +43,7 @@ export const UserTracks = () => {
 			}
 
 			const data = await response.json()
-			if(data.length === 0) {
+			if (data.length === 0) {
 				setIsLoading(false)
 			}
 			setTracks(data || [])
@@ -74,6 +74,7 @@ export const UserTracks = () => {
 			className={`w-full h-auto mb-20 ${
 				isDark ? 'bg-[#24232B]' : 'bg-[#E5E7EB]'
 			} border-none rounded-2xl shadow-xl overflow-hidden p-8 font-sans transform transition-all duration-300 hover:shadow-2xl`}
+			style={{ marginBottom: '750px' }}
 		>
 			<h1
 				className={`text-2xl font-bold mb-6 ${

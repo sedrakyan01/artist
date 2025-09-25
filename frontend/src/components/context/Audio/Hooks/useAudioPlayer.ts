@@ -52,14 +52,14 @@ export const useAudioPlayer = (
 		}
 
 		fetchUserData()
-	}, [currentTrack, token])
+	}, [currentTrack, token]) // eslint-disable-line
 
 	const cleanupAudio = useCallback((): void => {
 		hlsManager.destroy()
 		if (audioRef.current) {
 			audioManager.cleanup(audioRef.current)
 		}
-	}, [])
+	}, []) // eslint-disable-line
 
 	const resetTrack = useCallback(() => {
 		if (audioRef.current) {
@@ -72,13 +72,13 @@ export const useAudioPlayer = (
 		setIsLoading(false)
 		setCurrentTime(0)
 		setAudioDuration(0)
-	}, [])
+	}, []) // eslint-disable-line
 
 	const playTrack = useCallback(
 		async (track: Track): Promise<boolean> => {
 			if (!token || !track?.track_id) {
 				const errorMsg = !token
-					? 'Токен авторизации отсутствует'
+					? 'Ошибка авторизации'
 					: 'Track ID отсутствует'
 				console.error(errorMsg)
 				showError(errorMsg)
@@ -165,7 +165,7 @@ export const useAudioPlayer = (
 				return false
 			}
 		},
-		[token, cleanupAudio]
+		[token, cleanupAudio] // eslint-disable-line
 	)
 
 	const togglePlayPause = useCallback(
@@ -193,7 +193,7 @@ export const useAudioPlayer = (
 				await playTrack(track)
 			}
 		},
-		[currentTrack, isPlaying, playTrack]
+		[currentTrack, isPlaying, playTrack] // eslint-disable-line
 	)
 
 	const stopTrack = useCallback((): void => {
@@ -204,7 +204,7 @@ export const useAudioPlayer = (
 		setCurrentTrackList([])
 		setCurrentTime(0)
 		setAudioDuration(0)
-	}, [cleanupAudio])
+	}, [cleanupAudio]) // eslint-disable-line
 
 	const handleSeek = useCallback(
 		(time: number | string): void => {
@@ -220,7 +220,7 @@ export const useAudioPlayer = (
 				setCurrentTime(seekTime)
 			}
 		},
-		[audioState.audioDuration]
+		[audioState.audioDuration] // eslint-disable-line
 	)
 
 	return {

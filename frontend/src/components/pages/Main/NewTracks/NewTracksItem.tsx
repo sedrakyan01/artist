@@ -8,17 +8,29 @@ import { useAudioContext } from '../../../context/Audio/exports'
 
 import type { NewTracksItemProps } from './types'
 
+import { useAuth } from '../../../utils/Auth/hooks/useAuth'
+
+import { useNotifications } from '../../../utils/Notification/hooks/useNotification'
+
 export const NewTracksItem = ({ track, index }: NewTracksItemProps) => {
 	const { togglePlayPause, currentTrack, isPlaying } = useAudioContext()
 	const { isDark } = useTheme()
 
+	const { showError } = useNotifications()
+
 	const isCurrentTrack = currentTrack?.track_id === track.track_id
+
+	const { isUserAuthenticated } = useAuth()
 
 	const handleClick = async (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
 	) => {
 		e.stopPropagation()
-		await togglePlayPause(track)
+		if (isUserAuthenticated) {
+			await togglePlayPause(track)
+		} else {
+			showError('Вы должны войти в систему для прослушивания треков')
+		}
 	}
 	return (
 		<>
