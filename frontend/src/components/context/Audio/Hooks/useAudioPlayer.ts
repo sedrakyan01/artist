@@ -137,7 +137,6 @@ export const useAudioPlayer = (
 					onSeeked: () => setIsLoading(false),
 				})
 
-				// Настройка HLS
 				if (hlsManager.isSupported()) {
 					await hlsManager.setupHls(audio, streamUrl, error => {
 						showError(error)

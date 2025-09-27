@@ -6,13 +6,15 @@ import { FormatDuration } from '../../../utils/FormatDuration/FormatDuration'
 
 import { useAudioContext } from '../../../context/Audio/exports'
 
-import type { NewTracksItemProps } from './types'
-
 import { useAuth } from '../../../utils/Auth/hooks/useAuth'
 
 import { useNotifications } from '../../../utils/Notification/hooks/useNotification'
 
-export const NewTracksItem = ({ track, index }: NewTracksItemProps) => {
+export const NewTracksItem = ({
+	track,
+	index,
+	trackList = [],
+}: UpdatedNewTracksItemProps) => {
 	const { togglePlayPause, currentTrack, isPlaying } = useAudioContext()
 	const { isDark } = useTheme()
 
@@ -27,11 +29,12 @@ export const NewTracksItem = ({ track, index }: NewTracksItemProps) => {
 	) => {
 		e.stopPropagation()
 		if (isUserAuthenticated) {
-			await togglePlayPause(track)
+			await togglePlayPause(track, trackList)
 		} else {
 			showError('Вы должны войти в систему для прослушивания треков')
 		}
 	}
+
 	return (
 		<>
 			<div
@@ -65,13 +68,15 @@ export const NewTracksItem = ({ track, index }: NewTracksItemProps) => {
 								'https://via.placeholder.com/100')
 						}
 					/>
-					<button className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50'>
+					<button
+						className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 ${
+							isCurrentTrack && isPlaying ? 'opacity-100' : 'opacity-0'
+						} transition-opacity duration-200 bg-black/50`}
+					>
 						<div
 							onClick={handleClick}
 							className='p-1.5 rounded-full bg-purple-500/90 hover:bg-purple-500 transition-colors cursor-pointer duration-200'
 						>
-							{/* <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' /> */}
-
 							{isCurrentTrack && isPlaying ? (
 								<Pause size={16} className='text-white ml-0.5 cursor-pointer' />
 							) : (
@@ -100,11 +105,20 @@ export const NewTracksItem = ({ track, index }: NewTracksItemProps) => {
 						{track.artist_name || 'Неизвестный артист'}
 					</div>
 				</div>
-				<div className='group-hover:hidden flex gap-2 items-center text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-200'>
+				<div
+					className={`flex gap-2 items-center text-gray-400 ${
+						isCurrentTrack && isPlaying
+							? 'text-gray-300 hidden'
+							: 'text-gray-600 group-hover:hidden'
+					} text-xs group-hover:text-gray-300 transition-colors duration-200`}
+				>
 					<span className='font-medium'>{FormatDuration(track.duration)}</span>
-					{/* <Clock size={14} className='mr-1.5 opacity-70' /> */}
 				</div>
-				<div className='items-center gap-2 hidden group-hover:flex icons-container'>
+				<div
+					className={`items-center group-hover:flex gap-2 icons-container ${
+						isCurrentTrack && isPlaying ? 'flex' : 'hidden'
+					}`}
+				>
 					<button
 						onClick={handleClick}
 						className={`p-1.5 rounded-full ${
@@ -113,11 +127,10 @@ export const NewTracksItem = ({ track, index }: NewTracksItemProps) => {
 								: 'text-black hover:text-purple-800'
 						} hover:bg-purple-500/10 transition-colors duration-200 cursor-pointer`}
 					>
-						{/* <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' /> */}
 						{isCurrentTrack && isPlaying ? (
-							<Pause size={18} className='ml-0.5' />
+							<Pause size={18} className={`ml-0.5`} />
 						) : (
-							<Play size={18} className='ml-0.5' />
+							<Play size={18} className={`ml-0.5`} />
 						)}
 					</button>
 					<button

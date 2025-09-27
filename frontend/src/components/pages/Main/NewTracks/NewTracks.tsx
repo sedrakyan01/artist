@@ -83,7 +83,7 @@ export const NewTracks: React.FC<NewTracksProps> = () => {
 					))
 				) : newTracks.length > 0 ? (
 					newTracks.map((track, index) => (
-						<NewTracksItem key={index} track={track} index={index} />
+						<NewTracksItem key={index} track={track} index={index} trackList={newTracks} />
 					))
 				) : (
 					<div

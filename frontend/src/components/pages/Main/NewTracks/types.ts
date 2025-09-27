@@ -7,4 +7,5 @@ export interface NewTracksProps {
 export interface NewTracksItemProps {
 	track: Track
 	index: number
+	trackList?: Track[]
 }
