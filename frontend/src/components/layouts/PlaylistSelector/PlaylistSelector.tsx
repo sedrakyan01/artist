@@ -1,29 +1,7 @@
 import { Check, Plus, X } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
-interface Playlist {
-	id?: string
-	name: string
-	trackCount?: number
-	totalTracks?: number
-	tracksCount?: number
-	description?: string
-	status?: string
-}
-
-interface Track {
-	track_id: string
-	title: string
-	artist_name: string
-	duration: number
-	track_picture?: string
-}
-
-interface PlaylistSelectorProps {
-	track: Track
-	onClose: () => void
-	onAddToPlaylist: (playlistId: string, track: Track) => Promise<void>
-}
+import type { Playlist, PlaylistSelectorProps } from './types'
 
 export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 	track,

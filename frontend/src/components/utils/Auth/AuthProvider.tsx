@@ -11,7 +11,7 @@ const getTokenFromStorage = (): string | null => {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-	const [isUserAuthenticated, setIsUserAuthenticated] = useState<boolean>(false)
+	const [isUserAuthenticated, setIsUserAuthenticated] = useState<boolean>(true)
 	const [loading, setLoading] = useState<boolean>(true)
 
 	const validateToken = useCallback(async () => {
@@ -62,12 +62,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 				if (refreshToken) {
 					localStorage.setItem('refreshToken', refreshToken)
 				}
-				validateToken()
+
+				window.dispatchEvent(new Event('tokenUpdated'))
+
+				setIsUserAuthenticated(true)
 			} catch (error) {
 				console.error('Error saving tokens:', error)
 			}
 		},
-		[validateToken]
+		[]
 	)
 
 	useEffect(() => {
@@ -90,7 +93,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		login,
 		refreshAuth,
 		setIsUserAuthenticated,
-		loading
+		validateToken,
+		loading,
 	}
 
 	if (loading) {

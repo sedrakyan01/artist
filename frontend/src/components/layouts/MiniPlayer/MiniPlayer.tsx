@@ -9,12 +9,16 @@ import { TrackInfo } from '../TrackInfo/TrackInfo'
 
 import { useNotifications } from '../../utils/Notification/hooks/useNotification'
 
+import { useTheme } from '../../utils/Theme/hooks/useTheme'
+
 const defaultImage = 'https://misc.scdn.co/liked-songs/liked-songs-640.png'
 
 export const MiniPlayer: React.FC = () => {
 	const audioContext = useContext(AudioContext)
 
 	const { showError, showSuccess } = useNotifications()
+
+	const { isDark } = useTheme()
 
 	const [volume, setVolume] = useState<number>(1)
 	const [isMuted, setIsMuted] = useState<boolean>(false)
@@ -136,7 +140,7 @@ export const MiniPlayer: React.FC = () => {
 
 	return (
 		<div
-			className='fixed bottom-0 left-0 right-0 bg-[#18161c] backdrop-blur-md border-t border-[#2A293F] p-4 flex items-center z-10 shadow-lg transition-all duration-300'
+			className={`fixed bottom-0 left-0 right-0 ${isDark ? 'bg-[#18161c] border-[#2A293F]' : 'bg-[#fff] border-[#e5e7eb]'} backdrop-blur-md border-t p-4 flex items-center z-10 shadow-lg transition-all duration-300`}
 			onMouseEnter={() => setIsHovering(true)}
 			onMouseLeave={() => setIsHovering(false)}
 			style={{ height: '90px' }}
@@ -155,7 +159,7 @@ export const MiniPlayer: React.FC = () => {
 					/>
 				</div>
 				<div className='ml-4 w-36 overflow-hidden'>
-					<div className='text-white font-medium text-sm truncate'>
+					<div className={`${isDark ? 'text-white' : 'text-black'} font-medium text-sm truncate`}>
 						{track.title}
 					</div>
 					<div className='text-gray-400 text-xs truncate'>
@@ -183,7 +187,7 @@ export const MiniPlayer: React.FC = () => {
 					</button>
 					<button
 						onClick={handlePlayPause}
-						className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 transform ${
+						className={`w-10 cursor-pointer h-10 rounded-full flex items-center justify-center transition-all duration-200 transform ${
 							isTrackSelected
 								? 'bg-[#A855F7] hover:bg-[#9333EA] text-white'
 								: 'bg-gray-600 text-gray-400 cursor-pointer'
@@ -240,7 +244,7 @@ export const MiniPlayer: React.FC = () => {
 							></div>
 						</div>
 						<div
-							className='absolute h-3 w-3 rounded-full bg-white shadow-md transition-all duration-300'
+							className={`absolute h-3 w-3 rounded-full ${isDark ? 'bg-white' : 'bg-[#e5e7eb]'} shadow-md transition-all duration-300`}
 							style={{
 								left: `calc(${
 									(currentTime / (audioDuration || 100)) * 100

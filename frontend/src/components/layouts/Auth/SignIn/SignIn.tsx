@@ -28,12 +28,6 @@ const SignIn: React.FC<LoginProps> = ({
 
 	const { showError } = useNotifications()
 
-	const updateError = (errorMessage: string) => {
-		if (errorMessage) {
-			showError('Ошибка авторизации', errorMessage)
-		}
-	}
-
 	const checkRefreshToken = (): boolean => {
 		const cookies = document.cookie.split(';').map(cookie => cookie.trim())
 		const refreshTokenCookie = cookies.find(cookie =>
@@ -45,7 +39,6 @@ const SignIn: React.FC<LoginProps> = ({
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		setLoading(true)
-		updateError('')
 
 		try {
 			const response = await fetch('http://localhost:8080/signinsend', {
@@ -65,16 +58,16 @@ const SignIn: React.FC<LoginProps> = ({
 
 			if (!response.ok) {
 				if (data.answer === 'wrong password') {
-					updateError('Неверные данные для входа')
+					showError('Неверные данные для входа')
 				} else if (
 					data.answer === 'email does not exist' ||
 					data.answer === 'username does not exist'
 				) {
-					updateError(
+					showError(
 						'Пользователь с такими данными не найден, пожалуйста попробуйте еще раз'
 					)
 				} else {
-					updateError('Авторизация не удалась')
+					showError('Авторизация не удалась')
 				}
 				return
 			}
@@ -105,16 +98,15 @@ const SignIn: React.FC<LoginProps> = ({
 					const tracks = await fetchNewTracks()
 					console.log('Получили новые треки:', tracks)
 				} catch (err) {
-					console.error('Не удалось получить новые треки:', err)
+					showError('Не удалось получить новые треки:', err)
 				}
 			} else {
 				throw new Error('No access token received')
 			}
 		} catch (err) {
-			updateError('Произошла ошибка. Попробуйте снова.')
+			showError('Произошла ошибка. Попробуйте снова.', err)
 			localStorage.removeItem('accessToken')
 			localStorage.removeItem('hasRefreshToken')
-			console.error('Login failed:', err)
 		} finally {
 			setLoading(false)
 		}
@@ -129,7 +121,6 @@ const SignIn: React.FC<LoginProps> = ({
 
 	const toggleIdentifierType = () => {
 		setIsEmail(!isEmail)
-		updateError('')
 		setLoginData({
 			...loginData,
 			identifier: '',
