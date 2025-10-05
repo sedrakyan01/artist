@@ -3,6 +3,7 @@ import { SideBar } from '../../layouts/SideBar/SideBar'
 
 import { Genres } from './Genres/Genres'
 import { NewTracks } from './NewTracks/NewTracks'
+import { Artists } from './Artists/Artists'
 
 import { useTheme } from '../../utils/Theme/hooks/useTheme'
 
@@ -10,10 +11,10 @@ export const Main = () => {
 	const { isDark } = useTheme()
 	return (
 		<div
-			className={`text-white mt-30 h-screen flex ${
+			className={`text-white mt-30 flex ${
 				isDark ? 'bg-[#18161C]' : 'bg-[#FFF]'
 			}`}
-			style={{marginBottom: "350px"}}
+			style={{marginBottom: "120px"}}
 		>
 			<div className='z-[50]'>
 				<SideBar />
@@ -23,6 +24,7 @@ export const Main = () => {
 				<Header />
 				<Genres />
 				<NewTracks />
+				<Artists />
 			</div>
 		</div>
 	)

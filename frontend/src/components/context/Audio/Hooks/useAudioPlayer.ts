@@ -9,7 +9,7 @@ export const useAudioPlayer = (
 	token: string | null,
 	audioState: ReturnType<typeof import('./useAudioState').useAudioState>
 ) => {
-	const {	
+	const {
 		currentTrack,
 		setCurrentTrack,
 		isPlaying,
@@ -77,9 +77,7 @@ export const useAudioPlayer = (
 	const playTrack = useCallback(
 		async (track: Track): Promise<boolean> => {
 			if (!token || !track?.track_id) {
-				const errorMsg = !token
-					? 'Ошибка авторизации'
-					: 'Track ID отсутствует'
+				const errorMsg = !token ? 'Ошибка авторизации' : 'Track ID отсутствует'
 				console.error(errorMsg)
 				showError(errorMsg)
 				return false
@@ -215,11 +213,16 @@ export const useAudioPlayer = (
 				seekTime >= 0 &&
 				seekTime <= (audioState.audioDuration || 0)
 			) {
-				audioRef.current.currentTime = seekTime
 				setCurrentTime(seekTime)
+
+				try {
+					audioRef.current.currentTime = seekTime
+				} catch (err) {
+					console.warn('Ошибка перемотки аудио:', err)
+				}
 			}
 		},
-		[audioState.audioDuration] // eslint-disable-line
+		[audioState.audioDuration, audioRef, setCurrentTime]
 	)
 
 	return {

@@ -27,6 +27,8 @@ export const MiniPlayer: React.FC = () => {
 	const [isPlaylistSelectorOpen, setIsPlaylistSelectorOpen] =
 		useState<boolean>(false)
 	const [isHovering, setIsHovering] = useState<boolean>(false)
+	const [isScrubbing, setIsScrubbing] = useState<boolean>(false)
+	const [scrubValue, setScrubValue] = useState<number>(0)
 
 	const {
 		currentTrack,
@@ -102,6 +104,21 @@ export const MiniPlayer: React.FC = () => {
 		await togglePlayPause(track, [])
 	}
 
+	const onScrubStart = () => {
+		setIsScrubbing(true)
+		setScrubValue(currentTime)
+	}
+
+	const onScrubMove = (value: number) => {
+		setScrubValue(value)
+		handleSeek(value)
+	}
+
+	const onScrubEnd = () => {
+		setIsScrubbing(false)
+		handleSeek(scrubValue)
+	}
+
 	const handleAddToPlaylist = async (playlistId: string, track: Track) => {
 		try {
 			const token =
@@ -140,7 +157,9 @@ export const MiniPlayer: React.FC = () => {
 
 	return (
 		<div
-			className={`fixed bottom-0 left-0 right-0 ${isDark ? 'bg-[#18161c] border-[#2A293F]' : 'bg-[#fff] border-[#e5e7eb]'} backdrop-blur-md border-t p-4 flex items-center z-10 shadow-lg transition-all duration-300`}
+			className={`fixed bottom-0 left-0 right-0 ${
+				isDark ? 'bg-[#18161c] border-[#2A293F]' : 'bg-[#fff] border-[#e5e7eb]'
+			} backdrop-blur-md border-t p-4 flex items-center z-10 shadow-lg transition-all duration-300`}
 			onMouseEnter={() => setIsHovering(true)}
 			onMouseLeave={() => setIsHovering(false)}
 			style={{ height: '90px' }}
@@ -159,7 +178,11 @@ export const MiniPlayer: React.FC = () => {
 					/>
 				</div>
 				<div className='ml-4 w-36 overflow-hidden'>
-					<div className={`${isDark ? 'text-white' : 'text-black'} font-medium text-sm truncate`}>
+					<div
+						className={`${
+							isDark ? 'text-white' : 'text-black'
+						} font-medium text-sm truncate`}
+					>
 						{track.title}
 					</div>
 					<div className='text-gray-400 text-xs truncate'>
@@ -190,20 +213,22 @@ export const MiniPlayer: React.FC = () => {
 						className={`w-10 cursor-pointer h-10 rounded-full flex items-center justify-center transition-all duration-200 transform ${
 							isTrackSelected
 								? 'bg-[#A855F7] hover:bg-[#9333EA] text-white'
-								: 'bg-gray-600 text-gray-400 cursor-pointer'
+								: `${
+										isDark
+											? 'bg-gray-600 text-gray-400'
+											: 'bg-[#e5e7eb] text-[black]'
+								  } cursor-pointer`
 						}`}
 						disabled={!isTrackSelected || isLoading}
 						aria-label={isPlaying && isTrackSelected ? 'Pause' : 'Play'}
 					>
-						{isLoading && isTrackSelected ? (
-							<div className='w-5 h-5 border-2 border-white border-t-transparent cursor-pointer rounded-full animate-spin' />
-						) : isPlaying && isTrackSelected ? (
+						{isPlaying && isTrackSelected ? (
 							<div>
 								<FaPause size={14} />
 							</div>
 						) : (
 							<div className='text-center cursor-pointer flex justify-center'>
-								<FaPlay size={14} />
+								<FaPlay size={14} className='ml-1' />
 							</div>
 						)}
 					</button>
@@ -225,26 +250,41 @@ export const MiniPlayer: React.FC = () => {
 					<span className='text-gray-400 text-xs mr-3 tabular-nums w-8 text-right'>
 						{FormatDuration(currentTime)}
 					</span>
-					<div className='relative w-full max-w-md h-5 flex items-center flex-1'>
+					<div className='relative w-full max-w-md h-5 flex items-center'>
 						<input
 							type='range'
 							min='0'
 							max={audioDuration || 100}
-							value={currentTime}
-							onChange={e => handleSeek(e.target.value)}
-							className='absolute w-full h-1 rounded-full appearance-none cursor-pointer z-10 opacity-0'
+							value={isScrubbing ? scrubValue : currentTime}
+							onInput={e => {
+								const v = parseFloat((e.target as HTMLInputElement).value)
+								onScrubMove(v)
+							}}
+							onPointerDown={() => onScrubStart()}
+							onPointerUp={() => onScrubEnd()}
+							onChange={e => {
+								const v = parseFloat((e.target as HTMLInputElement).value)
+								handleSeek(v)
+							}}
+							className='absolute w-full h-5 rounded-full appearance-none cursor-pointer z-10 opacity-0'
 							disabled={!isTrackSelected || isLoading}
 						/>
-						<div className='absolute w-full h-1 bg-gray-700 rounded-full overflow-hidden'>
+						<div
+							className={`absolute w-full h-1 ${
+								isDark ? 'bg-gray-700' : 'bg-[#e5e7eb]'
+							} rounded-full overflow-hidden transition-all duration-200`}
+						>
 							<div
-								className='h-full bg-gradient-to-r from-purple-500 to-indigo-600'
+								className='h-full bg-gradient-to-r from-purple-500 to-indigo-600 transition-all duration-100'
 								style={{
 									width: `${(currentTime / (audioDuration || 100)) * 100}%`,
 								}}
 							></div>
 						</div>
 						<div
-							className={`absolute h-3 w-3 rounded-full ${isDark ? 'bg-white' : 'bg-[#e5e7eb]'} shadow-md transition-all duration-300`}
+							className={`absolute h-3 w-3 rounded-full ${
+								isDark ? 'bg-white' : 'bg-purple-500'
+							} shadow-md transition-all duration-100 ease-out`}
 							style={{
 								left: `calc(${
 									(currentTime / (audioDuration || 100)) * 100
@@ -267,7 +307,11 @@ export const MiniPlayer: React.FC = () => {
 					onClick={toggleTrackInfo}
 					className={`p-2 rounded-full transition-colors ${
 						isTrackSelected
-							? 'text-gray-400 hover:text-white hover:bg-gray-800'
+							? `cursor-pointer ${
+									isDark
+										? 'hover:bg-[#2A2730] text-gray-400 hover:text-white'
+										: 'hover:bg-[#d5d7da] hover:text-black'
+							  }`
 							: 'text-gray-600 cursor-pointer'
 					}`}
 					disabled={!isTrackSelected}
@@ -279,7 +323,7 @@ export const MiniPlayer: React.FC = () => {
 					onClick={togglePlaylistSelector}
 					className={`p-2 rounded-full transition-colors ${
 						isTrackSelected
-							? 'text-gray-400 hover:text-white hover:bg-gray-800'
+							? 'text-gray-400 hover:text-white cursor-pointer hover:bg-[#2A2730]'
 							: 'text-gray-600 cursor-pointer'
 					}`}
 					disabled={!isTrackSelected}
@@ -293,7 +337,7 @@ export const MiniPlayer: React.FC = () => {
 						disabled={!isTrackSelected}
 						className={`${
 							isTrackSelected
-								? 'text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-800'
+								? 'text-gray-400 hover:text-white cursor-pointer transition-colors p-2 rounded-full hover:bg-[#2A2730]'
 								: 'text-gray-600 cursor-pointer p-2'
 						}`}
 						aria-label={isMuted ? 'Unmute' : 'Mute'}
@@ -313,9 +357,11 @@ export const MiniPlayer: React.FC = () => {
 							step='0.01'
 							value={volume}
 							onChange={handleVolumeChange}
-							className='absolute w-full h-full opacity-0 cursor-pointer z-10'
+							className='absolute w-full h-5 opacity-0 cursor-pointer z-10'
 						/>
-						<div className='absolute w-full h-1 bg-gray-700 rounded-full overflow-hidden transition-all duration-200 group-hover:h-1.5'>
+						<div
+							className={`absolute w-full h-1 bg-gray-700 rounded-full overflow-hidden transition-all duration-200 group-hover:h-1.5`}
+						>
 							<div
 								className={`${
 									isTrackSelected
@@ -326,7 +372,9 @@ export const MiniPlayer: React.FC = () => {
 							></div>
 						</div>
 						<div
-							className='absolute h-3 w-3 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-all'
+							className={`absolute h-3 w-3 rounded-full ${
+								isDark ? 'bg-white' : 'bg-[#e5e7eb]'
+							} shadow-md opacity-0 group-hover:opacity-100 transition-all`}
 							style={{
 								left: `calc(${volume * 100}% - 6px)`,
 								boxShadow: '0 0 5px rgba(255, 255, 255, 0.5)',

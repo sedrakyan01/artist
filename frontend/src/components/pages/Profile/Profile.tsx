@@ -10,7 +10,7 @@ export const Profile = () => {
 	const { isDark } = useTheme()
 	return (
 		<div
-			className={`text-white mt-30 h-screen flex ${
+			className={`text-white mt-30 flex ${
 				isDark ? 'bg-[#18161C]' : 'bg-[#FFF]'
 			}`}
 		>

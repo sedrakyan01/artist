@@ -1,4 +1,6 @@
-import { Ellipsis, Heart, Pause, Play } from 'lucide-react'
+import { Ellipsis, Heart, Play } from 'lucide-react'
+
+import { IoMdPause } from 'react-icons/io'
 
 import { useTheme } from '../../../utils/Theme/hooks/useTheme'
 
@@ -14,7 +16,7 @@ export const NewTracksItem = ({
 	track,
 	index,
 	trackList = [],
-}: UpdatedNewTracksItemProps) => {
+}: NewTracksItemProps) => {
 	const { togglePlayPause, currentTrack, isPlaying } = useAudioContext()
 	const { isDark } = useTheme()
 
@@ -38,11 +40,15 @@ export const NewTracksItem = ({
 	return (
 		<>
 			<div
-				className={`group w-full flex items-center p-4 rounded-xl cursor-pointer transition-colors duration-200 ${
+				className={`group w-full flex items-center ${
+					isCurrentTrack
+						? 'bg-gradient-to-r from-[#36343F]/80 to-[#42404D]/60 border-purple-500/20 border'
+						: ''
+				} p-4 rounded-xl cursor-pointer transition-colors duration-200 ${
 					isDark
 						? 'hover:bg-gradient-to-r hover:from-[#36343F]/80 hover:to-[#42404D]/60'
 						: 'hover:bg-[#c9ccd2]'
-				} border border-transparent hover:border-purple-500/20 `}
+				} border-2 border-transparent hover:border-purple-500/20`}
 			>
 				<div className='w-10 text-center mr-4 font-semibold'>
 					<span
@@ -68,22 +74,23 @@ export const NewTracksItem = ({
 								'https://via.placeholder.com/100')
 						}
 					/>
-					<button
-						className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 ${
-							isCurrentTrack && isPlaying ? 'opacity-100' : 'opacity-0'
-						} transition-opacity duration-200 bg-black/50`}
+					{/* <button
+						className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50`}
 					>
 						<div
 							onClick={handleClick}
-							className='p-1.5 rounded-full bg-purple-500/90 hover:bg-purple-500 transition-colors cursor-pointer duration-200'
+							className='w-10 h-10 rounded-full text-center flex items-center justify-center bg-purple-500/90 hover:bg-purple-500 transition-colors cursor-pointer duration-200'
 						>
 							{isCurrentTrack && isPlaying ? (
-								<Pause size={16} className='text-white ml-0.5 cursor-pointer' />
+								<IoMdPause
+									size={22}
+									className='text-white ml-0 cursor-pointer'
+								/>
 							) : (
-								<Play size={16} className='text-white ml-0.5 cursor-pointer' />
+								<Play size={22} className='text-white ml-0 cursor-pointer' />
 							)}
 						</div>
-					</button>
+					</button> */}
 				</div>
 				<div className='flex-grow min-w-0'>
 					<div
@@ -128,7 +135,7 @@ export const NewTracksItem = ({
 						} hover:bg-purple-500/10 transition-colors duration-200 cursor-pointer`}
 					>
 						{isCurrentTrack && isPlaying ? (
-							<Pause size={18} className={`ml-0.5`} />
+							<IoMdPause size={18} className={`ml-0.5`} />
 						) : (
 							<Play size={18} className={`ml-0.5`} />
 						)}

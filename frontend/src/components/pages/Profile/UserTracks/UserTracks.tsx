@@ -74,7 +74,7 @@ export const UserTracks = () => {
 			className={`w-full h-auto mb-20 ${
 				isDark ? 'bg-[#24232B]' : 'bg-[#E5E7EB]'
 			} border-none rounded-2xl shadow-xl overflow-hidden p-8 font-sans transform transition-all duration-300 hover:shadow-2xl`}
-			style={{ marginBottom: '750px' }}
+			style={{ marginBottom: '120px' }}
 		>
 			<h1
 				className={`text-2xl font-bold mb-6 ${
@@ -89,7 +89,12 @@ export const UserTracks = () => {
 				))
 			) : tracks.length > 0 ? (
 				tracks.map((track, index) => (
-					<TrackItem key={index} track={track} index={index} />
+					<TrackItem
+						key={index}
+						track={track}
+						index={index}
+						trackList={tracks}
+					/>
 				))
 			) : tracks.length === 0 ? (
 				<div
