@@ -5,6 +5,7 @@ import Divider, { DividerOr } from '../../../ui/Divider/Divider'
 import { useNotifications } from '../../../utils/Notification/hooks/useNotification'
 import type { LoginData, LoginProps } from './types'
 
+import { fetchArtists } from '../../../utils/Fetch/FetchArtists/FetchArtists'
 import { fetchNewTracks } from '../../../utils/Fetch/NewTracks/FetchNewTracks'
 
 import { useTheme } from '../../../utils/Theme/hooks/useTheme'
@@ -96,7 +97,8 @@ const SignIn: React.FC<LoginProps> = ({
 				onSuccessfulLogin?.()
 				try {
 					const tracks = await fetchNewTracks()
-					console.log('Получили новые треки:', tracks)
+					const artists = await fetchArtists()
+					console.log('Получил данные:', { tracks, artists })
 				} catch (err) {
 					showError('Не удалось получить новые треки:', err)
 				}

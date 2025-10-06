@@ -6,36 +6,22 @@ import { useNavigate } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
 import { useNotifications } from '../../../utils/Notification/hooks/useNotification'
 
+import { fetchArtists } from '../../../utils/Fetch/FetchArtists/FetchArtists'
 import { ArtistItem } from './ArtistItem'
 import { ArtistsSkeleton } from './Skeleton/ArtistsSkeleton'
 
 export const Artists = () => {
 	const { showError } = useNotifications()
-	const [artists, setArtists] = useState([])
+	const [artist, setArtist] = useState([])
 	const [loading, setLoading] = useState(true)
-	const [skeletonCount, setSkeletonCount] = useState(6) // eslint-disable-line
+	const [skeletonCount, setSkeletonCount] = useState(5) // eslint-disable-line
 
 	useEffect(() => {
 		const getPopularArtists = async () => {
 			const startTime = Date.now()
 			try {
-				const response = await fetch('http://localhost:8080/main', {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					credentials: 'include',
-				})
-				if (!response.ok) {
-					const errorText = await response.text()
-					showError(
-						errorText || 'Ошибка при получении популярных исполнителей.'
-					)
-					return
-				}
-				const data = await response.json()
-				const artistsData = data.artists || []
-				setArtists(artistsData)
+				const artists = await fetchArtists()
+				setArtist(artists)
 			} catch (error) {
 				showError('Ошибка получения популярных исполнителей:', error)
 			} finally {
@@ -53,14 +39,24 @@ export const Artists = () => {
 			}
 		}
 		getPopularArtists()
-	}, [])
+		const onTokenUpdated = () => getPopularArtists()
+		const onArtistsUpdated = () => getPopularArtists()
+
+		window.addEventListener('tokenUpdated', onTokenUpdated)
+		window.addEventListener('artistsUpdated', onArtistsUpdated)
+
+		return () => {
+			window.removeEventListener('tokenUpdated', onTokenUpdated)
+			window.removeEventListener('artistsUpdated', onArtistsUpdated)
+		}
+	}, [showError])
 
 	const { isDark } = useTheme()
 	const navigate = useNavigate()
 
 	return (
 		<div
-			className={`w-full h-[250px] ${
+			className={`w-full h-auto ${
 				isDark ? 'bg-[#24232B]' : 'bg-[#E5E7EB]'
 			} rounded-xl p-8`}
 		>
@@ -84,15 +80,17 @@ export const Artists = () => {
 					} hover:scale-105 cursor-pointer mr-4 mt-[-20px] transition-transform duration-200`}
 				/>
 			</div>
-			<div>
+			<div className='flex justify-center gap-7'>
 				{loading ? (
 					Array.from({ length: skeletonCount }, (_, index) => (
 						<ArtistsSkeleton key={index} />
 					))
-				) : artists.length > 0 ? (
-					artists.map((artist, index) => (
-						<ArtistItem key={index} artists={artists} index={index} />
-					))
+				) : artist.length > 0 ? (
+					artist
+						.slice(0, 5)
+						.map((artist, index) => (
+							<ArtistItem key={index} artist={artist} index={index} />
+						))
 				) : (
 					<div
 						className={`text-center mx-auto ${

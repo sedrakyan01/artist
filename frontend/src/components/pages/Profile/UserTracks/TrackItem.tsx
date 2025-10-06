@@ -32,12 +32,16 @@ export const TrackItem = ({ track, index, trackList }: TrackItemProps) => {
 			<div
 				className={`group w-full mb-2 flex items-center ${
 					isCurrentTrack
-						? 'bg-gradient-to-r from-[#36343F]/80 to-[#42404D]/60 border-purple-500/20 border'
+						? `${
+								isDark
+									? 'bg-gradient-to-r from-[#36343F]/80 to-[#42404D]/60 border-purple-500/20'
+									: 'bg-[#d5d7da]/100 border-purple-500/20'
+						  } border`
 						: ''
 				} p-4 rounded-xl cursor-pointer transition-colors duration-200 ${
 					isDark
 						? 'hover:bg-gradient-to-r hover:from-[#36343F]/80 hover:to-[#42404D]/60'
-						: 'hover:bg-[#c9ccd2]'
+						: 'hover:bg-[#d5d7da]/100'
 				} border-2 border-transparent hover:border-purple-500/20`}
 			>
 				<div className='w-10 text-center mr-4 font-semibold'>

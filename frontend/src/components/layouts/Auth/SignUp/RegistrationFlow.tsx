@@ -9,7 +9,6 @@ import { EmailValidationStep } from './Steps/EmailValidationStep'
 import { NameStep } from './Steps/NameStep'
 import { PasswordStep } from './Steps/PasswordStep'
 
-
 import { useNotifications } from '../../../utils/Notification/hooks/useNotification'
 import type { FormData, RegistrationFlowProps } from './types'
 
@@ -87,6 +86,11 @@ const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
 
 			showSuccess('Успешная регистрация')
 			setIsSuccess(true)
+			try {
+				window.dispatchEvent(new Event('artistsUpdated'))
+			} catch (err) {
+				console.warn('Ошибка обновления списка исполнителей:', err)
+			}
 		} catch (error) {
 			showError('Ошибка при регистрации.', error)
 			setIsLoading(false)
@@ -147,9 +151,17 @@ const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
 				)}
 				{isLoading && (
 					<div className='mt-6 text-center'>
-						<div className={`flex items-center w-[520px] gap-3 ${isDark ? "bg-[#33313B]/50" : "bg-[#e5e7eb]"} p-3 rounded-lg border border-[#33313B] mb-2`}>
+						<div
+							className={`flex items-center w-[520px] gap-3 ${
+								isDark ? 'bg-[#33313B]/50' : 'bg-[#e5e7eb]'
+							} p-3 rounded-lg border border-[#33313B] mb-2`}
+						>
 							<div className='flex-shrink-0 w-2 h-2 bg-purple-500 rounded-full'></div>
-							<p className={`${isDark ? "text-[#C7C7C7]" : "text-black"} text-sm`}>
+							<p
+								className={`${
+									isDark ? 'text-[#C7C7C7]' : 'text-black'
+								} text-sm`}
+							>
 								Выполняется регистрация...
 							</p>
 						</div>

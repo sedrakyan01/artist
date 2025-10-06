@@ -1,9 +1,9 @@
 import { Header } from '../../layouts/Header/Header'
 import { SideBar } from '../../layouts/SideBar/SideBar'
 
+import { Artists } from './Artists/Artists'
 import { Genres } from './Genres/Genres'
 import { NewTracks } from './NewTracks/NewTracks'
-import { Artists } from './Artists/Artists'
 
 import { useTheme } from '../../utils/Theme/hooks/useTheme'
 
@@ -14,7 +14,7 @@ export const Main = () => {
 			className={`text-white mt-30 flex ${
 				isDark ? 'bg-[#18161C]' : 'bg-[#FFF]'
 			}`}
-			style={{marginBottom: "120px"}}
+			style={{ marginBottom: '120px' }}
 		>
 			<div className='z-[50]'>
 				<SideBar />
