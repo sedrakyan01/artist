@@ -80,7 +80,7 @@ export const Artists = () => {
 					} hover:scale-105 cursor-pointer mr-4 mt-[-20px] transition-transform duration-200`}
 				/>
 			</div>
-			<div className='flex justify-center gap-7'>
+			<div className='flex justify-center gap-9'>
 				{loading ? (
 					Array.from({ length: skeletonCount }, (_, index) => (
 						<ArtistsSkeleton key={index} />
