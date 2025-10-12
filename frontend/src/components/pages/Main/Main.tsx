@@ -14,7 +14,7 @@ export const Main = () => {
 			className={`text-white mt-30 flex ${
 				isDark ? 'bg-[#18161C]' : 'bg-[#FFF]'
 			}`}
-			style={{marginBottom: "120px"}}
+			style={{ marginBottom: '120px' }}
 		>
 			<div className='z-[50]'>
 				<SideBar />

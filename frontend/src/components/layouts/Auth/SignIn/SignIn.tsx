@@ -198,7 +198,7 @@ const SignIn: React.FC<LoginProps> = ({
 							disabled={loading}
 							className='w-full mb-4 bg-gradient-to-r from-purple-500 to-indigo-600 mt-2 cursor-pointer rounded-2xl p-3 font-semibold ssm:w-[270px] m-auto button'
 						>
-							{loading ? 'Входим...' : 'Войти'}
+							{loading ? 'Проверка...' : 'Войти'}
 						</button>
 					</div>
 				</div>

@@ -32,6 +32,7 @@ export const MiniPlayer: React.FC = () => {
 
 	const {
 		currentTrack,
+		currentTrackList,
 		isPlaying,
 		currentTime,
 		audioDuration,
@@ -101,7 +102,7 @@ export const MiniPlayer: React.FC = () => {
 			return
 		}
 
-		await togglePlayPause(track, [])
+		await togglePlayPause(track, currentTrackList || [])
 	}
 
 	const onScrubStart = () => {
@@ -157,9 +158,13 @@ export const MiniPlayer: React.FC = () => {
 
 	return (
 		<div
-			className={`fixed bottom-0 left-0 right-0 ${
-				isDark ? 'bg-[#18161c] border-[#2A293F]' : 'bg-[#fff] border-[#e5e7eb]'
-			} backdrop-blur-md border-t p-4 flex items-center z-10 shadow-lg transition-all duration-300`}
+			className={`fixed bottom-0 left-0 right-0 
+				${isDark ? 'bg-[#18161c]/30' : 'bg-white/20'} 
+				border-t ml-[85px] ${isDark ? 'border-white/10' : 'border-gray-200/30'}
+				[backdrop-filter:blur(20px)_saturate(180%)]
+				[-webkit-backdrop-filter:blur(20px)_saturate(180%)]
+				shadow-[0_-0px_0px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.1)]
+				p-4 flex items-center z-10 transition-all duration-300`}
 			onMouseEnter={() => setIsHovering(true)}
 			onMouseLeave={() => setIsHovering(false)}
 			style={{ height: '90px' }}
@@ -198,11 +203,20 @@ export const MiniPlayer: React.FC = () => {
 				<div className='flex items-center justify-center gap-6 mb-2 w-full'>
 					<button
 						onClick={playPreviousTrack}
-						className={`w-8 h-8 flex items-center justify-center transition-all duration-200 cursor-pointer ${
-							isTrackSelected
-								? 'text-gray-400 hover:text-white'
-								: 'text-gray-600 cursor-pointer'
-						}`}
+						className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 cursor-pointer
+							${isDark ? 'bg-white/5' : 'bg-black/5'}
+							border ${isDark ? 'border-white/10' : 'border-black/10'}
+							[backdrop-filter:blur(10px)]
+							[-webkit-backdrop-filter:blur(10px)]
+							${
+								isTrackSelected
+									? `${
+											isDark
+												? 'text-gray-300 hover:bg-white/10 hover:border-white/15'
+												: 'text-gray-700 hover:bg-black/10 hover:border-black/15'
+									  } hover:-translate-y-0.5`
+									: 'text-gray-600 cursor-not-allowed opacity-50'
+							}`}
 						disabled={!isTrackSelected || isLoading}
 						aria-label='Previous track'
 					>
@@ -210,35 +224,45 @@ export const MiniPlayer: React.FC = () => {
 					</button>
 					<button
 						onClick={handlePlayPause}
-						className={`w-10 cursor-pointer h-10 rounded-full flex items-center justify-center transition-all duration-200 transform ${
-							isTrackSelected
-								? 'bg-[#A855F7] hover:bg-[#9333EA] text-white'
-								: `${
-										isDark
-											? 'bg-gray-600 text-gray-400'
-											: 'bg-[#e5e7eb] text-[black]'
-								  } cursor-pointer`
-						}`}
+						className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 transform
+							border
+							[backdrop-filter:blur(20px)_saturate(180%)]
+							[-webkit-backdrop-filter:blur(20px)_saturate(180%)]
+							shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.1)]
+							${
+								isTrackSelected
+									? 'bg-purple-600/90 border-white/30 hover:bg-purple-600/80 text-white cursor-pointer'
+									: `${
+											isDark
+												? 'bg-gray-600/20 border-white/10'
+												: 'bg-gray-300/30 border-gray-400/20'
+									  } text-gray-400 cursor-not-allowed opacity-50`
+							}`}
 						disabled={!isTrackSelected || isLoading}
 						aria-label={isPlaying && isTrackSelected ? 'Pause' : 'Play'}
 					>
 						{isPlaying && isTrackSelected ? (
-							<div>
-								<FaPause size={14} />
-							</div>
+							<FaPause size={14} />
 						) : (
-							<div className='text-center cursor-pointer flex justify-center'>
-								<FaPlay size={14} className='ml-1' />
-							</div>
+							<FaPlay size={14} className='ml-[2px]' />
 						)}
 					</button>
 					<button
 						onClick={playNextTrack}
-						className={`w-8 h-8 flex items-center justify-center transition-all duration-200 cursor-pointer ${
-							isTrackSelected
-								? 'text-gray-400 hover:text-white'
-								: 'text-gray-600 cursor-pointer'
-						}`}
+						className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 cursor-pointer
+							${isDark ? 'bg-white/5' : 'bg-black/5'}
+							border ${isDark ? 'border-white/10' : 'border-black/10'}
+							[backdrop-filter:blur(10px)]
+							[-webkit-backdrop-filter:blur(10px)]
+							${
+								isTrackSelected
+									? `${
+											isDark
+												? 'text-gray-300 hover:bg-white/10 hover:border-white/15'
+												: 'text-gray-700 hover:bg-black/10 hover:border-black/15'
+									  } hover:-translate-y-0.5`
+									: 'text-gray-600 cursor-not-allowed opacity-50'
+							}`}
 						disabled={!isTrackSelected || isLoading}
 						aria-label='Next track'
 					>
@@ -305,15 +329,20 @@ export const MiniPlayer: React.FC = () => {
 			<div className='flex items-center space-x-4 w-48 justify-end'>
 				<button
 					onClick={toggleTrackInfo}
-					className={`p-2 rounded-full transition-colors ${
-						isTrackSelected
-							? `cursor-pointer ${
-									isDark
-										? 'hover:bg-[#2A2730] text-gray-400 hover:text-white'
-										: 'hover:bg-[#d5d7da] hover:text-black'
-							  }`
-							: 'text-gray-600 cursor-pointer'
-					}`}
+					className={`p-2 rounded-lg transition-all duration-200
+						${isDark ? 'bg-white/5' : 'bg-black/5'}
+						border ${isDark ? 'border-white/10' : 'border-black/10'}
+						[backdrop-filter:blur(10px)]
+						[-webkit-backdrop-filter:blur(10px)]
+						${
+							isTrackSelected
+								? `cursor-pointer ${
+										isDark
+											? 'text-gray-300 hover:bg-white/10 hover:border-white/15'
+											: 'text-gray-700 hover:bg-black/10 hover:border-black/15'
+								  } hover:-translate-y-0.5`
+								: 'text-gray-600 cursor-not-allowed opacity-50'
+						}`}
 					disabled={!isTrackSelected}
 					aria-label='Track info'
 				>
@@ -321,11 +350,20 @@ export const MiniPlayer: React.FC = () => {
 				</button>
 				<button
 					onClick={togglePlaylistSelector}
-					className={`p-2 rounded-full transition-colors ${
-						isTrackSelected
-							? 'text-gray-400 hover:text-white cursor-pointer hover:bg-[#2A2730]'
-							: 'text-gray-600 cursor-pointer'
-					}`}
+					className={`p-2 rounded-lg transition-all duration-200
+						${isDark ? 'bg-white/5' : 'bg-black/5'}
+						border ${isDark ? 'border-white/10' : 'border-black/10'}
+						[backdrop-filter:blur(10px)]
+						[-webkit-backdrop-filter:blur(10px)]
+						${
+							isTrackSelected
+								? `cursor-pointer ${
+										isDark
+											? 'text-gray-300 hover:bg-white/10 hover:border-white/15'
+											: 'text-gray-700 hover:bg-black/10 hover:border-black/15'
+								  } hover:-translate-y-0.5`
+								: 'text-gray-600 cursor-not-allowed opacity-50'
+						}`}
 					disabled={!isTrackSelected}
 					aria-label='Add to playlist'
 				>
@@ -335,10 +373,19 @@ export const MiniPlayer: React.FC = () => {
 					<button
 						onClick={toggleMute}
 						disabled={!isTrackSelected}
-						className={`${
+						className={`p-2 rounded-lg transition-all duration-200
+						${isDark ? 'bg-white/5' : 'bg-black/5'}
+						border ${isDark ? 'border-white/10' : 'border-black/10'}
+						[backdrop-filter:blur(10px)]
+						[-webkit-backdrop-filter:blur(10px)]
+						${
 							isTrackSelected
-								? 'text-gray-400 hover:text-white cursor-pointer transition-colors p-2 rounded-full hover:bg-[#2A2730]'
-								: 'text-gray-600 cursor-pointer p-2'
+								? `cursor-pointer ${
+										isDark
+											? 'text-gray-300 hover:bg-white/10 hover:border-white/15'
+											: 'text-gray-700 hover:bg-black/10 hover:border-black/15'
+								  } hover:-translate-y-0.5`
+								: 'text-gray-600 cursor-not-allowed opacity-50'
 						}`}
 						aria-label={isMuted ? 'Unmute' : 'Mute'}
 					>

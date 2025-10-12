@@ -34,19 +34,28 @@ export const PrimaryNav = () => {
 								)
 							}
 						}}
-						className={`group text-left`}
+						className='group text-left'
 						data-tooltip-id='my-tooltipp'
 						data-tooltip-content={item.name}
 						aria-current={isActive ? 'page' : undefined}
 					>
 						<div
-							className={`px-5 ${
-								isDark ? 'text-gray-300' : 'text-black'
-							} py-3 flex items-center justify-center rounded-md transition-colors cursor-pointer duration-200 ${
-								isActive
-									? 'bg-purple-600 text-white shadow-lg'
-									: 'hover:bg-[#2A2730] hover:text-white'
-							}`}
+							className={`
+								px-5 py-3 flex items-center justify-center rounded-xl
+								transition-all duration-300 cursor-pointer
+								${
+									isActive
+										? 'bg-purple-600/90 text-white border border-white/30 shadow-[0_0px_32px_rgba(147,51,234,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]'
+										: isDark
+										? 'bg-black/20 text-gray-300 border border-white/10 hover:bg-black/30 hover:border-white/15 hover:-translate-y-0.5'
+										: 'bg-white/10 text-gray-700 border border-white/15 hover:bg-white/15 hover:border-white/20 hover:-translate-y-0.5'
+								}
+								[backdrop-filter:blur(20px)_saturate(180%)]
+								[-webkit-backdrop-filter:blur(20px)_saturate(180%)]
+								shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.1)]
+								hover:shadow-[0_12px_40px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.15)]
+								active:translate-y-0
+							`}
 						>
 							{item.icon}
 						</div>

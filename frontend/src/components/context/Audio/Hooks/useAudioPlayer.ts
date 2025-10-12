@@ -168,7 +168,9 @@ export const useAudioPlayer = (
 	const togglePlayPause = useCallback(
 		async (track: Track, tracks: Track[] = []): Promise<void> => {
 			const filteredTracks = tracks.filter((t: Track) => t?.track_id)
-			setCurrentTrackList(filteredTracks)
+			if (filteredTracks.length > 0) {
+				setCurrentTrackList(filteredTracks)
+			}
 
 			if (
 				currentTrack?.track_id === track?.track_id &&

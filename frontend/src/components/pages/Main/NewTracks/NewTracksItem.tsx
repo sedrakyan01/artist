@@ -52,7 +52,7 @@ export const NewTracksItem = ({
 					isDark
 						? 'hover:bg-gradient-to-r hover:from-[#36343F]/80 hover:to-[#42404D]/60'
 						: 'hover:bg-[#d5d7da]/100'
-				} border-2 border-transparent hover:border-purple-500/20`}
+				} border-2 border-transparent hover:border-purple-500`}
 			>
 				<div className='w-10 text-center mr-4 font-semibold'>
 					<span
