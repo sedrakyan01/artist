@@ -180,12 +180,30 @@ export const useAudioPlayer = (
 				if (isPlaying) {
 					audioRef.current.pause()
 				} else {
+					// Safe play: ignore interruptions caused by immediate pause() calls
 					try {
-						await audioRef.current.play()
-					} catch (error) {
-						const errorMessage =
-							error instanceof Error ? error.message : 'Ошибка возобновления'
-						showError(`Ошибка возобновления: ${errorMessage}`)
+						const playPromise = audioRef.current.play()
+						if (playPromise && typeof playPromise.then === 'function') {
+							await playPromise
+						}
+					} catch (err) {
+						const maybeError = err as
+							| Error
+							| { name?: string; message?: string }
+						const isInterrupted =
+							maybeError &&
+							(maybeError.name === 'AbortError' ||
+								/interrupted/i.test(String(maybeError.message)))
+						if (isInterrupted) {
+							// Ignore expected interruption when user rapidly pauses/plays
+							console.debug('play() interrupted by pause() - ignored')
+						} else {
+							const errorMessage =
+								maybeError instanceof Error
+									? maybeError.message
+									: 'Ошибка возобновления'
+							showError(`Ошибка возобновления: ${errorMessage}`)
+						}
 					}
 				}
 			} else {

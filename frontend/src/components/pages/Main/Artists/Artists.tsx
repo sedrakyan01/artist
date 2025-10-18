@@ -10,7 +10,9 @@ import { fetchArtists } from '../../../utils/Fetch/FetchArtists/FetchArtists'
 import { ArtistItem } from './ArtistItem'
 import { ArtistsSkeleton } from './Skeleton/ArtistsSkeleton'
 
-export const Artists = () => {
+import type { ArtistsProps } from './types'
+
+export const Artists: React.FC<ArtistsProps> = () => {
 	const { showError } = useNotifications()
 	const [artist, setArtist] = useState([])
 	const [loading, setLoading] = useState(true)

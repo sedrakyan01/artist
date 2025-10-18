@@ -103,13 +103,7 @@ export const ProfileCard = () => {
 	}
 
 	if (!userData) {
-		return (
-			<div className='border-none rounded-2xl shadow-xl overflow-hidden font-sans bg-primary-COMPONENTS p-8 text-center'>
-				<p className='text-white text-lg'>
-					Не удалось загрузить данные пользователя
-				</p>
-			</div>
-		)
+		return <ProfileCardSkeleton />
 	}
 
 	const statCards = [

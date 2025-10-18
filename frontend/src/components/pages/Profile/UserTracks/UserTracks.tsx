@@ -111,7 +111,9 @@ export const UserTracks = () => {
 						свой первый трек
 					</p>
 				</div>
-			) : null}
+			) : (
+				<TrackItemSkeleton />
+			)}
 		</div>
 	)
 }

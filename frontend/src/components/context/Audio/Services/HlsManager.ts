@@ -28,9 +28,22 @@ export class HlsManager {
 			try {
 				await audio.play()
 			} catch (playError) {
-				const errorMessage =
-					playError instanceof Error ? playError.message : 'Ошибка запуска HLS'
-				onError(`Ошибка запуска: ${errorMessage}`)
+				const maybeError = playError as
+					| Error
+					| { name?: string; message?: string }
+				const isInterrupted =
+					maybeError &&
+					(maybeError.name === 'AbortError' ||
+						/interrupted/i.test(String(maybeError.message)))
+				if (isInterrupted) {
+					console.debug('HLS play() interrupted by user pause - ignoring')
+				} else {
+					const errorMessage =
+						maybeError instanceof Error
+							? maybeError.message
+							: 'Ошибка запуска HLS'
+					onError(`Ошибка запуска: ${errorMessage}`)
+				}
 			}
 		})
 

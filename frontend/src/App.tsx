@@ -8,6 +8,7 @@ import {
 import { ProtectedRoute } from './components/utils/ProtectedRoute/ProtectedRoute'
 
 import { Main } from './components/pages/Main/Main'
+import { Playlists } from './components/pages/Playlists/Playlists'
 import { Profile } from './components/pages/Profile/Profile'
 import { Settings } from './components/pages/Settings/Settings'
 import { Tracks } from './components/pages/Tracks/Tracks'
@@ -41,6 +42,14 @@ function App() {
 						element={
 							<ProtectedRoute>
 								<Tracks />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path='/playlists'
+						element={
+							<ProtectedRoute>
+								<Playlists />
 							</ProtectedRoute>
 						}
 					/>

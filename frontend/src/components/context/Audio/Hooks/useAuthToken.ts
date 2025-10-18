@@ -15,14 +15,14 @@ export const useAuthToken = () => {
 				setToken(e.newValue)
 			}
 		}
-		
+
 		const handleCustomTokenUpdate = () => {
 			refreshToken()
 		}
 
 		window.addEventListener('storage', handleStorageChange)
 		window.addEventListener('tokenUpdated', handleCustomTokenUpdate)
-		
+
 		return () => {
 			window.removeEventListener('storage', handleStorageChange)
 			window.removeEventListener('tokenUpdated', handleCustomTokenUpdate)

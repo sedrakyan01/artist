@@ -13,7 +13,11 @@ import { useTheme } from '../../utils/Theme/hooks/useTheme'
 
 const defaultImage = 'https://misc.scdn.co/liked-songs/liked-songs-640.png'
 
-export const MiniPlayer: React.FC = () => {
+import type { Track } from '../../context/Audio/types'
+
+import type { MiniPlayerProps } from './types'
+
+export const MiniPlayer: React.FC<MiniPlayerProps> = () => {
 	const audioContext = useContext(AudioContext)
 
 	const { showError, showSuccess } = useNotifications()
@@ -160,7 +164,7 @@ export const MiniPlayer: React.FC = () => {
 		<div
 			className={`fixed bottom-0 left-0 right-0 
 				${isDark ? 'bg-[#18161c]/30' : 'bg-white/20'} 
-				border-t ml-[85px] ${isDark ? 'border-white/10' : 'border-gray-200/30'}
+				border-t ml-[85px] ${isDark ? '' : 'border-gray-200/30'}
 				[backdrop-filter:blur(20px)_saturate(180%)]
 				[-webkit-backdrop-filter:blur(20px)_saturate(180%)]
 				shadow-[0_-0px_0px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.1)]
