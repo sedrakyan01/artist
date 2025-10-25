@@ -163,7 +163,7 @@ export const NotificationItem: React.FC<NotificationProps> = ({
 				<button
 					ref={closeButtonRef}
 					onClick={() => onRemove(notification.id)}
-					className='flex-shrink-0 ml-4 text-gray-400 hover:text-gray-600 transition-colors'
+					className='flex-shrink-0 ml-4 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
 				>
 					<X className='w-4 h-4' />
 				</button>

@@ -41,7 +41,7 @@ export const ArtistItem = ({ artist }) => {
 					>
 						<span
 							className={`text-xs font-semibold ${
-								isDark ? 'text-purple-500' : 'text-purple-700'
+								isDark ? 'text-gray-300' : 'text-gray-700'
 							}`}
 						>
 							{artist.plays === 0 ? 'Без прослушиваний' : artist.plays}
@@ -62,7 +62,7 @@ export const ArtistItem = ({ artist }) => {
 							isDark ? 'bg-[#34333b]' : 'bg-[#d5d7da]'
 						} rounded-lg p-2.5 transition-colors duration-300`}
 					>
-						<span className='text-xs font-semibold text-purple-700'>
+						<span className={`text-xs font-semibold ${isDark ? 'text-purple-500' : 'text-purple-700'}`}>
 							20070702
 							<span
 								className={`ml-1 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}

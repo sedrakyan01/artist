@@ -135,7 +135,7 @@ const SignIn: React.FC<LoginProps> = ({
 			<DividerOr />
 			<form onSubmit={handleSubmit} className='w-full'>
 				<div className='m-auto flex gap-2 flex-col'>
-					<label className='text-white'>
+					<label className={`${isDark ? 'text-white' : 'text-gray-700'}`}>
 						{isEmail ? 'Электронная почта' : 'Имя пользователя'}{' '}
 					</label>
 					<input
@@ -168,7 +168,9 @@ const SignIn: React.FC<LoginProps> = ({
 						</span>
 					</button>
 					<div>
-						<label className='block text-white'>Пароль</label>
+						<label
+							className={`block ${isDark ? 'text-white' : 'text-gray-700'}`}
+						>Пароль</label>
 						<input
 							type='password'
 							name='password'

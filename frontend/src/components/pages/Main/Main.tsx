@@ -7,8 +7,11 @@ import { NewTracks } from './NewTracks/NewTracks'
 
 import { useTheme } from '../../utils/Theme/hooks/useTheme'
 
+import { ModalInfo } from './ModalInfo'
+
 export const Main = () => {
 	const { isDark } = useTheme()
+
 	return (
 		<div
 			className={`text-white mt-30 flex ${
@@ -25,6 +28,7 @@ export const Main = () => {
 				<Genres />
 				<NewTracks />
 				<Artists />
+				<ModalInfo />
 			</div>
 		</div>
 	)

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { NotificationContext } from '../../context/Notification/NotContext'
-import { createNotification } from './Notification'
 import { NotificationContainer } from './NotContainer'
+import { createNotification } from './Notification'
 import type {
 	Notification,
 	NotificationContextType,
@@ -19,15 +19,22 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
 	const addNotification = useCallback(
 		(notification: Omit<Notification, 'id'>) => {
-			const newNotification = createNotification(notification)
+			const MAX_NOTIFICATIONS = 3
 
-			setNotifications(prev => [...prev, newNotification])
+			setNotifications(prev => {
+				if (prev.length >= MAX_NOTIFICATIONS) {
+					return prev
+				}
 
-			if (!notification.persistent) {
-				setTimeout(() => {
-					removeNotification(newNotification.id)
-				}, newNotification.duration)
-			}
+				const newNotification = createNotification(notification)
+				if (!notification.persistent) {
+					setTimeout(() => {
+						removeNotification(newNotification.id)
+					}, newNotification.duration)
+				}
+
+				return [...prev, newNotification]
+			})
 		},
 		[removeNotification]
 	)

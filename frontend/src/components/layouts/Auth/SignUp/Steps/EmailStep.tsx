@@ -83,7 +83,7 @@ export const EmailStep: React.FC<EmailStepProps> = ({
 	return (
 		<div>
 			<div className='flex justify-center flex-col'>
-				<label className='block text-white text-sm font-medium mb-1'>
+				<label className={`block ${isDark ? "text-white" : "text-gray-700"} text-sm font-medium mb-1`}>
 					Электронная почта
 				</label>
 				<input

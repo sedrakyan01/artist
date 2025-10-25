@@ -8,6 +8,7 @@ import {
 import { ProtectedRoute } from './components/utils/ProtectedRoute/ProtectedRoute'
 
 import { Main } from './components/pages/Main/Main'
+import { PlaylistPage } from './components/pages/Playlists/PlaylistPage'
 import { Playlists } from './components/pages/Playlists/Playlists'
 import { Profile } from './components/pages/Profile/Profile'
 import { Settings } from './components/pages/Settings/Settings'
@@ -53,6 +54,15 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
+					<Route
+						path='/playlist/:id'
+						element={
+							<ProtectedRoute>
+								<PlaylistPage />
+							</ProtectedRoute>
+						}
+					/>
+
 					<Route path='*' element={<Navigate to='/' />} />
 				</Routes>
 				<MiniPlayer />
