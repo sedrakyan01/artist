@@ -211,7 +211,11 @@ export const PlaylistPage = () => {
 											} rounded`}
 										></div>
 									) : (
-										<h1 className='text-2xl font-bold'>
+										<h1
+											className={`text-2xl font-bold ${
+												isDark ? 'text-white' : 'text-black'
+											}`}
+										>
 											Плейлист -{' '}
 											{playlistDetails?.name[0].toUpperCase() +
 												playlistDetails?.name.slice(1)}

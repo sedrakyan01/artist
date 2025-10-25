@@ -14,9 +14,9 @@ import { useNotifications } from '../../../utils/Notification/hooks/useNotificat
 
 import type { PlaylistsProps } from './types'
 
-import { useTheme } from '../../../utils/Theme/hooks/useTheme'
-
 import { PlaylistsSkeleton } from './Skeleton/PlaylistsSkeleton'
+
+import { useTheme } from '../../../utils/Theme/hooks/useTheme'
 
 export const MyPlaylists: React.FC<PlaylistsProps> = () => {
 	const { showError } = useNotifications()
@@ -85,7 +85,9 @@ export const MyPlaylists: React.FC<PlaylistsProps> = () => {
 						key={index}
 						role='button'
 						onClick={() => handlePlaylistClick(index, playlist)}
-						className='group flex justify-center flex-col cursor-pointer bg-[#2a2831] p-4 rounded-lg transition-all duration-300 shadow-lg'
+						className={`group flex justify-center flex-col cursor-pointer ${
+							isDark ? 'bg-[#2a2831]' : 'bg-[#d5d7da]'
+						} p-4 rounded-lg transition-all duration-300 shadow-lg`}
 					>
 						<div className='relative mb-4 overflow-hidden rounded-md shadow-xl'>
 							<img
@@ -96,12 +98,20 @@ export const MyPlaylists: React.FC<PlaylistsProps> = () => {
 							<div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
 						</div>
 						<div>
-							<p className='mb-1 text-base font-semibold text-white line-clamp-2'>
+							<p
+								className={`mb-1 text-base font-semibold ${
+									isDark ? 'text-white' : 'text-black'
+								} line-clamp-2`}
+							>
 								{playlist?.name
 									? playlist.name[0].toUpperCase() + playlist.name.slice(1)
 									: 'Без названия'}
 							</p>
-							<p className='text-[13px] w-[99%] truncate text-zinc-400 line-clamp-2'>
+							<p
+								className={`text-[13px] w-[99%] truncate ${
+									isDark ? 'text-zinc-400' : 'text-black'
+								} line-clamp-2`}
+							>
 								{playlist?.status === 'private' ? 'Приватный' : 'Публичный'} •{' '}
 								{playlist?.owner
 									? playlist.owner[0].toUpperCase() + playlist.owner.slice(1)

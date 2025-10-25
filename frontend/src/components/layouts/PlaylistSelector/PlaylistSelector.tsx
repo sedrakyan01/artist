@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import type { Playlist, PlaylistSelectorProps } from './types'
 
+import { useTheme } from '../../utils/Theme/hooks/useTheme'
+
 export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 	track,
 	onClose,
@@ -11,11 +13,15 @@ export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 	const [isLoading, setIsLoading] = useState(true)
 	const [addingToPlaylist, setAddingToPlaylist] = useState<string | null>(null)
 	const [successPlaylist, setSuccessPlaylist] = useState<string | null>(null)
+	const [newPlaylistName, setNewPlaylistName] = useState('')
+	const [isCreating, setIsCreating] = useState(false)
 	const modalRef = useRef<HTMLDivElement>(null)
+	const { isDark } = useTheme()
 
 	useEffect(() => {
 		const loadPlaylists = async () => {
 			setIsLoading(true)
+			const startTime = Date.now()
 			try {
 				const token = localStorage.getItem('accessToken')
 				const response = await fetch('http://localhost:8080/getuserplaylists', {
@@ -78,7 +84,17 @@ export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 			} catch (error) {
 				console.error('Failed to load playlists:', error)
 			} finally {
-				setIsLoading(false)
+				const elapsedTime = Date.now() - startTime
+				const minLoadingTime = 800
+				const remainingTime = minLoadingTime - elapsedTime
+
+				if (remainingTime > 0) {
+					setTimeout(() => {
+						setIsLoading(false)
+					}, remainingTime)
+				} else {
+					setIsLoading(false)
+				}
 			}
 		}
 		loadPlaylists()
@@ -97,6 +113,45 @@ export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 		document.addEventListener('mousedown', handleClickOutside)
 		return () => document.removeEventListener('mousedown', handleClickOutside)
 	}, [onClose])
+
+	const handleCreateAndAddToPlaylist = async () => {
+		if (!newPlaylistName.trim()) return
+
+		setIsCreating(true)
+		try {
+			const token = localStorage.getItem('accessToken')
+			if (!token) throw new Error('No access token found')
+
+			const url = `http://localhost:8080/addtoplaylist?trackID=${
+				track.track_id
+			}&playlistName=${encodeURIComponent(newPlaylistName.trim())}`
+
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				credentials: 'include',
+			})
+
+			if (!response.ok) {
+				throw new Error('Failed to create playlist')
+			}
+
+			setSuccessPlaylist(newPlaylistName)
+			const updatedPlaylists = [
+				...playlists,
+				{ name: newPlaylistName, tracksCount: 1 },
+			]
+			setPlaylists(updatedPlaylists)
+			setNewPlaylistName('')
+		} catch (error) {
+			console.error('Failed to create playlist:', error)
+		} finally {
+			setIsCreating(false)
+		}
+	}
 
 	const handleAddToPlaylist = async (playlistId: string) => {
 		setAddingToPlaylist(playlistId)
@@ -121,10 +176,6 @@ export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 				)
 			}
 			setSuccessPlaylist(playlistId)
-			setTimeout(() => {
-				setSuccessPlaylist(null)
-				onClose()
-			}, 1500)
 		} catch (error) {
 			console.error('Failed to add to playlist:', error)
 		} finally {
@@ -136,27 +187,70 @@ export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 		<div className='absolute bottom-24 right-4'>
 			<div
 				ref={modalRef}
-				className='bg-[#1A181F] border border-[#2A293F] rounded-lg shadow-xl max-w-md w-full max-h-[70vh] overflow-hidden'
+				className={`${
+					isDark ? 'bg-[#24232B]' : 'bg-[#E5E7EB]'
+				} border border-[#2A293F] rounded-lg shadow-xl max-w-md w-full max-h-[70vh] overflow-hidden`}
 			>
 				<div className='p-4 border-b border-[#2A293F] flex items-center justify-between'>
 					<div>
-						<h3 className='text-white font-semibold text-lg'>
+						<h3
+							className={`${
+								isDark ? 'text-white' : 'text-black'
+							} font-semibold text-lg`}
+						>
 							Добавить в плейлист
 						</h3>
 					</div>
 					<button
 						onClick={onClose}
-						className='p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full transition-colors'
+						className={`text-gray-400 ${
+							isDark ? 'hover:text-white' : 'hover:text-black'
+						} rounded-full transition-colors cursor-pointer`}
 					>
 						<X size={20} />
 					</button>
+				</div>
+
+				<div className='p-4 border-b border-[#2A293F]'>
+					<div className='flex gap-2'>
+						<input
+							type='text'
+							value={newPlaylistName}
+							onChange={e => setNewPlaylistName(e.target.value)}
+							placeholder='Название нового плейлиста'
+							className={`flex-1 ${
+								isDark ? 'bg-[#2a2831] text-white' : 'bg-[#D5D7DA] text-black'
+							} hover:ring-purple-600 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600`}
+						/>
+						<button
+							onClick={handleCreateAndAddToPlaylist}
+							disabled={isCreating || !newPlaylistName.trim()}
+							className='px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-600 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2 cursor-pointer'
+						>
+							{isCreating ? (
+								<>
+									<div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
+									Создание...
+								</>
+							) : (
+								<>
+									<Plus size={16} />
+									Создать
+								</>
+							)}
+						</button>
+					</div>
 				</div>
 
 				<div className='max-h-96 overflow-y-auto'>
 					{isLoading ? (
 						<div className='p-8 flex items-center justify-center'>
 							<div className='w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin'></div>
-							<span className='ml-3 text-gray-400'>Загрузка плейлистов...</span>
+							<span
+								className={`ml-3 ${isDark ? 'text-gray-400' : 'text-black'}`}
+							>
+								Загрузка плейлистов...
+							</span>
 						</div>
 					) : playlists.length === 0 ? (
 						<div className='p-8 text-center text-gray-400'>
@@ -172,14 +266,20 @@ export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 								return (
 									<div
 										key={key}
-										className='flex items-center justify-between p-3 hover:bg-gray-800/50 rounded-lg transition-colors group'
+										className={`flex items-center justify-between p-3 ${
+											isDark ? 'hover:bg-[#2a2831]' : 'hover:bg-[#d5d7da]'
+										} cursor-pointer rounded-lg transition-colors group`}
 									>
 										<div className='flex items-center flex-1 min-w-0'>
 											<div className='w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3'>
 												<Plus size={20} className='text-white' />
 											</div>
 											<div className='min-w-0 flex-1'>
-												<div className='text-white font-medium truncate'>
+												<div
+													className={`${
+														isDark ? 'text-white' : 'text-black'
+													} font-medium truncate`}
+												>
 													{playlist.name}
 												</div>
 												<div className='text-gray-400 text-sm'>
@@ -192,11 +292,11 @@ export const PlaylistSelector: React.FC<PlaylistSelectorProps> = ({
 											disabled={
 												addingToPlaylist === key || successPlaylist === key
 											}
-											className='ml-3 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-green-600 text-white text-sm font-medium rounded-full transition-colors flex items-center gap-2 min-w-[80px] justify-center'
+											className='ml-3 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-green-600 text-white text-sm font-medium rounded transition-colors flex items-center cursor-pointer gap-2 min-w-[80px] justify-center'
 										>
 											{addingToPlaylist === key ? (
 												<>
-													<div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
+													<div className='w-4 h-4 border-2 border-white border-t-transparent rounded animate-spin'></div>
 													Добавление
 												</>
 											) : successPlaylist === key ? (
