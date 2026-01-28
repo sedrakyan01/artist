@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live News Feed</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fb;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #3b5998;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    #newsFeed {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background-color: #fafafa;
+      border-top: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      background-color: #fff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .message-enter {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    .message-enter-active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .message-exit {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .message-exit-active {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    .message p {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .message time {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>Live News Feed</header>
+  <div id="newsFeed"></div>
+</div>
+
+<script>
+  const socket = new WebSocket("ws://localhost:8080/liveactionsp");
+
+  // Получаем сообщения и добавляем их в новостную ленту
+  socket.onmessage = function(event) {
+    const message = event.data;
+    const newsFeed = document.getElementById('newsFeed');
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.classList.add('message-enter');
+
+    messageDiv.innerHTML = `
+                <p>${message}</p>
+                <time>${new Date().toLocaleTimeString()}</time>
+            `;
+
+    newsFeed.appendChild(messageDiv);
+
+    // Анимация появления
+    setTimeout(() => {
+      messageDiv.classList.remove('message-enter');
+      messageDiv.classList.add('message-enter-active');
+    }, 100);
+
+    // Прокручиваем вниз
+    newsFeed.scrollTop = newsFeed.scrollHeight;
+  };
+
+  socket.onerror = function(error) {
+    console.error('WebSocket Error: ', error);
+  };
+
+  socket.onopen = function() {
+    console.log('WebSocket connection established');
+  };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1251 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Главный API сервиса",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/addtoplaylist": {
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Этот эндпоинт позволяет добавить трек в плейлист при наличии токенов, trackID и названия плейлиста",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "playlist"
+                ],
+                "summary": "Добавление трека в плейлист",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID добавляемого трека",
+                        "name": "trackID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Название плейлиста, в который добавляется трек",
+                        "name": "playlistName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/deletefromplaylist": {
+            "delete": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Этот эндпоинт позволяет удалить трек из плейлиста при наличии токенов, trackID и названия плейлиста",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "playlist"
+                ],
+                "summary": "Удаление трека из плейлиста",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID удаляемого трека",
+                        "name": "trackID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Название плейлиста, из которого удаляется трек",
+                        "name": "playlistName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/deleteplaylist": {
+            "delete": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Этот эндпоинт позволяет удалить плейлист при наличии токенов и названия плейлиста",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "playlist"
+                ],
+                "summary": "Удаление плейлиста",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Название удаляемого плейлиста",
+                        "name": "playlistName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/deleteusertrack": {
+            "delete": {
+                "description": "Этот эндпоинт позволяет удалить трек при наличии токенов",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "track"
+                ],
+                "summary": "Удаления трека пользователя",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID трека",
+                        "name": "trackID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Владелец трека - Username",
+                        "name": "trackOwner",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Жанр трека",
+                        "name": "genre",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The track has been deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/emailchecksend": {
+            "get": {
+                "description": "Проверка наличия имейла в БД при регистрации и авторизации пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authorization"
+                ],
+                "summary": "Проверка наличия имейла в БД при регистрации и авторизации пользователя (отправка данных со страницы /signup)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "email пользователя",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Наличие или отсутствие email в БД, json(\"exists\": exists(тип bool))",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный метод запроса для проверки email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка проверки наличия email, ошибка отправки ответа",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getUserTracks": {
+            "get": {
+                "description": "Этот эндпоинт позволяет получить треки пользователя при наличии токенов",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Получение треков пользователя",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Стартовый номер получения плейлистов",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Конечный номер получения плейлистов",
+                        "name": "end",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Метаданные треков",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.TrackMeta"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getpublicplaylists": {
+            "get": {
+                "description": "Этот эндпоинт позволяет получить публичные плейлисты",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "playlist"
+                ],
+                "summary": "Получение публичных плейлистов",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Стартовый номер получения плейлистов",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Конечный номер получения плейлистов",
+                        "name": "end",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Playlists",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/gettrackmetasend": {
+            "get": {
+                "description": "Возвращает информацию о треке по его уникальному идентификатору",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "track"
+                ],
+                "summary": "Получить метаданные трека (отправка track_id со страницы /gettrackmeta)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID трека",
+                        "name": "track_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.TrackMeta"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Empty trackID, trackID error, metadata retrieval error, or trackMeta serialization error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed - Invalid request method",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/gettracksfromplaylist": {
+            "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Этот эндпоинт позволяет получить треки как из публичного плейлиста, так и из личного, сначала проверяется наличие плейлиста в списке публичных, есть он там есть, то токены не нужны, если его там нет, начинается проверка токенов и получение треков из личного плейлиста",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "playlist"
+                ],
+                "summary": "Получение треков из плейлистов",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Название плейлиста",
+                        "name": "playlistName",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Стартовый номер получения плейлистов",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Конечный номер получения плейлистов",
+                        "name": "end",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Метаданные треков",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.TrackMeta"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getuserdatasend": {
+            "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Получение данных пользователя из Redis по Username, находящемуся в access токене",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Получение данных пользователя",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or expired token",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Getting user data error, encoding user data error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/getuserplaylists": {
+            "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Этот эндпоинт позволяет получить плейлисты пользователя при наличии токенов",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "playlist"
+                ],
+                "summary": "Получение плейлистов пользователя",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/inneractions": {
+            "post": {
+                "description": "Отправка GraphQL-запроса к серверу",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "graphql"
+                ],
+                "summary": "GraphQL endpoint",
+                "parameters": [
+                    {
+                        "description": "GraphQL запрос в формате строки",
+                        "name": "query",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/liveactions": {
+            "get": {
+                "description": "Этот эндпоинт позволяет получать события в реальном времени по протоколу websocket",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "live actions"
+                ],
+                "summary": "События в реальном времени",
+                "responses": {
+                    "200": {
+                        "description": "События",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "get": {
+                "description": "Возвращает пустые токены и сообщение о выходе из системы",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authorization"
+                ],
+                "summary": "Выход из системы - удаление токенов",
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ json(\"message\": \"Вы успешно вышли из системы\") с пустыми токенами в Cookies и заголовке",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        },
+                        "headers": {
+                            "Authorization": {
+                                "type": "string",
+                                "description": "Bearer \u003cAccessJWTToken\u003e"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request method",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Answer error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlistchangestatus": {
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Этот эндпоинт позволяет изменить статус плейлиста при наличии токенов и названия плейлиста",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "playlist"
+                ],
+                "summary": "Изменение статуса плейлиста",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Название плейлиста",
+                        "name": "playlistName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/signinsend": {
+            "post": {
+                "description": "Принимает email/username и пароль согласно структуре UserData, и при успехе возвращает сообщение json и токены: refresh в Cookies \"refresh_token\" и access в заголовке \"Authorization\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authorization"
+                ],
+                "summary": "Аутентификация пользователя",
+                "parameters": [
+                    {
+                        "description": "Данные от клиента для авторизации",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.UserData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ json(\"message\": \"result\") с токенами в Cookies и заголовке",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        },
+                        "headers": {
+                            "Authorization": {
+                                "type": "string",
+                                "description": "Bearer \u003cAccessJWTToken\u003e"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request method, Data error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Wrong password",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/signupsend": {
+            "post": {
+                "description": "Принимает все метаданные пользователя согласно структуре User и добавляет его в БД Users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authorization"
+                ],
+                "summary": "Регистрация нового пользователя",
+                "parameters": [
+                    {
+                        "description": "Метаданные пользователя",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The user has been registered, json(\"message\": \"answer\")",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный метод запроса, ошибка обработки данных",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка обработки пароля, ошибка добавления пользователя, Ошибка отправки результата",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/streammusicsend": {
+            "get": {
+                "description": "Принимает от клиента имя исполнителя, название трека и стартовую позицию воспроизведения и по этим данным начинает воспроизведение",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "track"
+                ],
+                "summary": "Выполняет потоковый стриминг трека из GRPC клиенту (отправка данных со страницы /streammusic)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Имя артиста",
+                        "name": "artist_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Название трека",
+                        "name": "title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Стартовая позиция воспроизведения в секундах",
+                        "name": "startPosition",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Audio stream, поток []byte данных трека",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error: invalid startPosition, streaming music error, error getting metadata, error streaming music",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/uploadmusicsend": {
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    },
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Принимает от клиента трек и метаданные трека и отправляет через GRPC в БД",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "track"
+                ],
+                "summary": "Загружает трек и его метаданные в БД (отправка данных со страницы /uploadmusic)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Access token (format: 'Bearer {token}') из header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token из cookies",
+                        "name": "refresh_token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Track cover image, тип multipart/form-data",
+                        "name": "picture_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Track audio file, тип multipart/form-data",
+                        "name": "track_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Метадата трека согласно TrackMeta структуры in JSON format, тип multipart/form-data",
+                        "name": "meta_data",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Your track has been uploaded successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid input, missing required data, file too large, file type error, or metadata retrieval error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or expired token",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed - Use POST",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large - Exceeds file size limit",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type - Must be multipart/form-data",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Unexpected issue",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.TrackMeta": {
+            "type": "object",
+            "properties": {
+                "add_to_db_date": {
+                    "description": "Дата добавления в БД - не отправлять",
+                    "type": "string"
+                },
+                "album_name": {
+                    "type": "string"
+                },
+                "artist_name": {
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Описание песни - необязательное поле",
+                    "type": "string"
+                },
+                "duration": {
+                    "description": "Длительность песни - не отправлять",
+                    "type": "integer"
+                },
+                "genre": {
+                    "type": "string"
+                },
+                "likes": {
+                    "description": "Количество лайков - не отправлять",
+                    "type": "integer"
+                },
+                "owner": {
+                    "description": "Владелец песни - не отправлять",
+                    "type": "string"
+                },
+                "plays": {
+                    "description": "Количество прослушиваний - не отправлять",
+                    "type": "integer"
+                },
+                "release_year": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "track_id": {
+                    "type": "integer"
+                },
+                "track_picture": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "main.User": {
+            "type": "object",
+            "properties": {
+                "artistName": {
+                    "type": "string"
+                },
+                "birthDate": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.UserData": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

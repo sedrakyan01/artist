@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .response {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+    <form id="authForm">
+        <input type="text" id="login" placeholder="Email or Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="response" class="response"></div>
+</div>
+
+<script>
+    document.getElementById('authForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const login = document.getElementById('login').value;
+        const password = document.getElementById('password').value;
+        let payload = {};
+
+        // Determine if login is email or username
+        if (login.includes('@')) {
+            payload = {
+                email: login,
+                username: '', // Empty username
+                password: password
+            };
+        } else {
+            payload = {
+                email: '', // Empty email
+                username: login,
+                password: password
+            };
+        }
+
+        try {
+            const response = await fetch('/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json(); // Parse the JSON response
+
+            if (response.ok) {
+                // Success response
+                document.getElementById("response").textContent = `Server Response: ${result.answer}`;
+            } else {
+                // Error response
+                document.getElementById("response").textContent = `Error: ${result.answer}`;
+            }
+        } catch (error) {
+            document.getElementById("response").textContent = `Error: ${error.message}`;
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проверка Email</title>
+</head>
+<body>
+<h1>Проверка Email</h1>
+
+<form id="email-form">
+    <label for="email">Введите ваш email:</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+    <button type="submit">Проверить</button>
+</form>
+
+<div id="message" style="margin-top: 20px;"></div>
+
+<script>
+    // Обработчик отправки формы
+    document.getElementById('email-form').addEventListener('submit', function(event) {
+        event.preventDefault();  // Предотвратить стандартное поведение формы (перезагрузку страницы)
+
+        const email = document.getElementById('email').value;
+        const messageDiv = document.getElementById('message');
+
+        // Очистить предыдущие сообщения
+        messageDiv.innerHTML = '';
+
+        // Отправить POST-запрос на сервер
+        fetch('/emailcheckpage', {  // Обратите внимание на правильный путь
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email }), // Отправляем email в теле запроса
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при обработке запроса');
+                }
+                return response.json();  // Парсим ответ как JSON
+            })
+            .then(data => {
+                // Выводим сообщение в зависимости от ответа сервера
+                if (data.exists) {
+                    messageDiv.innerHTML = 'Этот email уже существует. Пожалуйста, используйте другой email.';
+                    messageDiv.style.color = 'red';
+                } else {
+                    messageDiv.innerHTML = 'Этот email свободен, вы можете продолжить регистрацию.';
+                    messageDiv.style.color = 'green';
+                }
+            })
+            .catch(error => {
+                // Если произошла ошибка, выводим её
+                messageDiv.innerHTML = 'Ошибка при проверке email. Попробуйте снова.';
+                messageDiv.style.color = 'red';
+                console.error('Ошибка:', error);
+            });
+    });
+</script>
+</body>
+</html>

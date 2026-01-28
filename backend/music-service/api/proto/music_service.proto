@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package music_service;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "music-service/api/proto/gen";
+
+service MusicService {
+  rpc UploadMusic (UploadMusicRequest) returns (UploadMusicResponse);
+  rpc StreamMusic (StreamMusicRequest) returns (stream StreamMusicResponse);
+  rpc GetMeta (GetMetaRequest) returns (GetMetaResponse);
+}
+
+message UploadMusicRequest {
+  string artist_name = 1;
+  string title = 2;
+  string album_name = 3;
+  string genre = 4;
+  string description = 5;
+  int32 duration = 6;
+  int32 release_year = 7;
+  google.protobuf.Timestamp add_to_db_date = 8;
+  bytes track_picture = 9;
+  bytes music_content = 10;
+  string owner = 11;
+  int32 trackID = 12;
+}
+
+message UploadMusicResponse {
+  string result = 1;
+}
+
+message StreamMusicRequest {
+  string username = 1;
+  string track_id = 2;
+  int64 start_position = 3;
+}
+
+message StreamMusicResponse {
+  bytes data = 1;
+}
+
+message GetMetaRequest {
+  int32 track_id = 1;
+}
+
+message GetMetaResponse {
+  string artist_name = 1;
+  string title = 2;
+  string album_name = 3;
+  string genre = 4;
+  string description = 5;
+  int32 duration = 8;
+  int32 release_year = 6;
+  google.protobuf.Timestamp add_to_db_date = 7;
+  string owner = 9;
+  int64 likes = 10;
+  int64 plays = 11;
+  bytes track_picture = 12;
+  int32 trackID = 13;
+}

@@ -1,0 +1,845 @@
+basePath: /
+definitions:
+  main.TrackMeta:
+    properties:
+      add_to_db_date:
+        description: Дата добавления в БД - не отправлять
+        type: string
+      album_name:
+        type: string
+      artist_name:
+        type: string
+      description:
+        description: Описание песни - необязательное поле
+        type: string
+      duration:
+        description: Длительность песни - не отправлять
+        type: integer
+      genre:
+        type: string
+      likes:
+        description: Количество лайков - не отправлять
+        type: integer
+      owner:
+        description: Владелец песни - не отправлять
+        type: string
+      plays:
+        description: Количество прослушиваний - не отправлять
+        type: integer
+      release_year:
+        type: integer
+      title:
+        type: string
+      track_id:
+        type: integer
+      track_picture:
+        items:
+          type: integer
+        type: array
+    type: object
+  main.User:
+    properties:
+      artistName:
+        type: string
+      birthDate:
+        type: string
+      country:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      password:
+        type: string
+      userName:
+        type: string
+    type: object
+  main.UserData:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: Главный API сервиса
+  version: "1.0"
+paths:
+  /addtoplaylist:
+    post:
+      description: Этот эндпоинт позволяет добавить трек в плейлист при наличии токенов,
+        trackID и названия плейлиста
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: ID добавляемого трека
+        in: query
+        name: trackID
+        required: true
+        type: integer
+      - description: Название плейлиста, в который добавляется трек
+        in: query
+        name: playlistName
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Success message
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Добавление трека в плейлист
+      tags:
+      - playlist
+  /deletefromplaylist:
+    delete:
+      description: Этот эндпоинт позволяет удалить трек из плейлиста при наличии токенов,
+        trackID и названия плейлиста
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: ID удаляемого трека
+        in: query
+        name: trackID
+        required: true
+        type: integer
+      - description: Название плейлиста, из которого удаляется трек
+        in: query
+        name: playlistName
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Success message
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Удаление трека из плейлиста
+      tags:
+      - playlist
+  /deleteplaylist:
+    delete:
+      description: Этот эндпоинт позволяет удалить плейлист при наличии токенов и
+        названия плейлиста
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: Название удаляемого плейлиста
+        in: query
+        name: playlistName
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Success message
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Удаление плейлиста
+      tags:
+      - playlist
+  /deleteusertrack:
+    delete:
+      description: Этот эндпоинт позволяет удалить трек при наличии токенов
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: ID трека
+        in: query
+        name: trackID
+        required: true
+        type: string
+      - description: Владелец трека - Username
+        in: query
+        name: trackOwner
+        required: true
+        type: string
+      - description: Жанр трека
+        in: query
+        name: genre
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: The track has been deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Удаления трека пользователя
+      tags:
+      - track
+  /emailchecksend:
+    get:
+      description: Проверка наличия имейла в БД при регистрации и авторизации пользователя
+      parameters:
+      - description: email пользователя
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'Наличие или отсутствие email в БД, json("exists": exists(тип
+            bool))'
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: Неверный метод запроса для проверки email
+          schema:
+            type: string
+        "500":
+          description: Ошибка проверки наличия email, ошибка отправки ответа
+          schema:
+            type: string
+      summary: Проверка наличия имейла в БД при регистрации и авторизации пользователя
+        (отправка данных со страницы /signup)
+      tags:
+      - authorization
+  /getUserTracks:
+    get:
+      description: Этот эндпоинт позволяет получить треки пользователя при наличии
+        токенов
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: Стартовый номер получения плейлистов
+        in: query
+        name: start
+        required: true
+        type: string
+      - description: Конечный номер получения плейлистов
+        in: query
+        name: end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Метаданные треков
+          schema:
+            items:
+              $ref: '#/definitions/main.TrackMeta'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получение треков пользователя
+      tags:
+      - user
+  /getpublicplaylists:
+    get:
+      description: Этот эндпоинт позволяет получить публичные плейлисты
+      parameters:
+      - description: Стартовый номер получения плейлистов
+        in: query
+        name: start
+        required: true
+        type: string
+      - description: Конечный номер получения плейлистов
+        in: query
+        name: end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Playlists
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получение публичных плейлистов
+      tags:
+      - playlist
+  /gettrackmetasend:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает информацию о треке по его уникальному идентификатору
+      parameters:
+      - description: ID трека
+        in: query
+        name: track_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.TrackMeta'
+        "400":
+          description: Bad Request - Empty trackID, trackID error, metadata retrieval
+            error, or trackMeta serialization error
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed - Invalid request method
+          schema:
+            type: string
+      summary: Получить метаданные трека (отправка track_id со страницы /gettrackmeta)
+      tags:
+      - track
+  /gettracksfromplaylist:
+    get:
+      description: Этот эндпоинт позволяет получить треки как из публичного плейлиста,
+        так и из личного, сначала проверяется наличие плейлиста в списке публичных,
+        есть он там есть, то токены не нужны, если его там нет, начинается проверка
+        токенов и получение треков из личного плейлиста
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: Название плейлиста
+        in: query
+        name: playlistName
+        required: true
+        type: string
+      - description: Стартовый номер получения плейлистов
+        in: query
+        name: start
+        required: true
+        type: string
+      - description: Конечный номер получения плейлистов
+        in: query
+        name: end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Метаданные треков
+          schema:
+            items:
+              $ref: '#/definitions/main.TrackMeta'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Получение треков из плейлистов
+      tags:
+      - playlist
+  /getuserdatasend:
+    get:
+      description: Получение данных пользователя из Redis по Username, находящемуся
+        в access токене
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "401":
+          description: Unauthorized - Invalid or expired token
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Getting user data error, encoding user data error
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Получение данных пользователя
+      tags:
+      - user
+  /getuserplaylists:
+    get:
+      description: Этот эндпоинт позволяет получить плейлисты пользователя при наличии
+        токенов
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Получение плейлистов пользователя
+      tags:
+      - playlist
+  /inneractions:
+    post:
+      consumes:
+      - application/json
+      description: Отправка GraphQL-запроса к серверу
+      parameters:
+      - description: GraphQL запрос в формате строки
+        in: body
+        name: query
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            type: string
+      summary: GraphQL endpoint
+      tags:
+      - graphql
+  /liveactions:
+    get:
+      description: Этот эндпоинт позволяет получать события в реальном времени по
+        протоколу websocket
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: События
+          schema:
+            type: string
+      summary: События в реальном времени
+      tags:
+      - live actions
+  /logout:
+    get:
+      description: Возвращает пустые токены и сообщение о выходе из системы
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'Успешный ответ json("message": "Вы успешно вышли из системы")
+            с пустыми токенами в Cookies и заголовке'
+          headers:
+            Authorization:
+              description: Bearer <AccessJWTToken>
+              type: string
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request method
+          schema:
+            type: string
+        "500":
+          description: Answer error
+          schema:
+            type: string
+      summary: Выход из системы - удаление токенов
+      tags:
+      - authorization
+  /playlistchangestatus:
+    post:
+      description: Этот эндпоинт позволяет изменить статус плейлиста при наличии токенов
+        и названия плейлиста
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: Название плейлиста
+        in: query
+        name: playlistName
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Success message
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Изменение статуса плейлиста
+      tags:
+      - playlist
+  /signinsend:
+    post:
+      consumes:
+      - application/json
+      description: 'Принимает email/username и пароль согласно структуре UserData,
+        и при успехе возвращает сообщение json и токены: refresh в Cookies "refresh_token"
+        и access в заголовке "Authorization"'
+      parameters:
+      - description: Данные от клиента для авторизации
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.UserData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'Успешный ответ json("message": "result") с токенами в Cookies
+            и заголовке'
+          headers:
+            Authorization:
+              description: Bearer <AccessJWTToken>
+              type: string
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request method, Data error
+          schema:
+            type: string
+        "401":
+          description: Wrong password
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      summary: Аутентификация пользователя
+      tags:
+      - authorization
+  /signupsend:
+    post:
+      consumes:
+      - application/json
+      description: Принимает все метаданные пользователя согласно структуре User и
+        добавляет его в БД Users
+      parameters:
+      - description: Метаданные пользователя
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'The user has been registered, json("message": "answer")'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Неверный метод запроса, ошибка обработки данных
+          schema:
+            type: string
+        "500":
+          description: Ошибка обработки пароля, ошибка добавления пользователя, Ошибка
+            отправки результата
+          schema:
+            type: string
+      summary: Регистрация нового пользователя
+      tags:
+      - authorization
+  /streammusicsend:
+    get:
+      consumes:
+      - text/plain
+      description: Принимает от клиента имя исполнителя, название трека и стартовую
+        позицию воспроизведения и по этим данным начинает воспроизведение
+      parameters:
+      - description: Имя артиста
+        in: query
+        name: artist_name
+        required: true
+        type: string
+      - description: Название трека
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: Стартовая позиция воспроизведения в секундах
+        in: query
+        name: startPosition
+        required: true
+        type: integer
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: Audio stream, поток []byte данных трека
+          schema:
+            items:
+              items:
+                type: integer
+              type: array
+            type: array
+        "500":
+          description: 'Internal Server Error: invalid startPosition, streaming music
+            error, error getting metadata, error streaming music'
+          schema:
+            type: string
+      summary: Выполняет потоковый стриминг трека из GRPC клиенту (отправка данных
+        со страницы /streammusic)
+      tags:
+      - track
+  /uploadmusicsend:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Принимает от клиента трек и метаданные трека и отправляет через
+        GRPC в БД
+      parameters:
+      - description: 'Access token (format: ''Bearer {token}'') из header'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token из cookies
+        in: header
+        name: refresh_token
+        required: true
+        type: string
+      - description: Track cover image, тип multipart/form-data
+        in: formData
+        name: picture_file
+        required: true
+        type: file
+      - description: Track audio file, тип multipart/form-data
+        in: formData
+        name: track_file
+        required: true
+        type: file
+      - description: Метадата трека согласно TrackMeta структуры in JSON format, тип
+          multipart/form-data
+        in: formData
+        name: meta_data
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Your track has been uploaded successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request - Invalid input, missing required data, file too
+            large, file type error, or metadata retrieval error
+          schema:
+            type: string
+        "401":
+          description: Unauthorized - Invalid or expired token
+          schema:
+            type: string
+        "405":
+          description: Method Not Allowed - Use POST
+          schema:
+            type: string
+        "413":
+          description: Request Entity Too Large - Exceeds file size limit
+          schema:
+            type: string
+        "415":
+          description: Unsupported Media Type - Must be multipart/form-data
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error - Unexpected issue
+          schema:
+            type: string
+      security:
+      - CookieAuth: []
+      - BearerAuth: []
+      summary: Загружает трек и его метаданные в БД (отправка данных со страницы /uploadmusic)
+      tags:
+      - track
+swagger: "2.0"
